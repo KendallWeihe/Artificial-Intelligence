@@ -12,7 +12,7 @@ from random import randint
     #a 0 means end of tube
     #1 means empty
 
-solved_puzzle = np.zeros((6,12))
+solved_puzzle = np.zeros((6,13))
 for i in range(6):
     solved_puzzle[i,6-i:12-i*2] = 1
 
@@ -40,130 +40,169 @@ def make_move(num_moves, num_moves_left, puzzle):
     #if flip, reorder all arrays in reverse
 
     red_tube_temp = np.zeros((6))
+    red_tube_len = 0
     green_tube_temp = np.zeros((6))
+    green_tube_len = 0
     yellow_tube_temp = np.zeros((6))
+    yellow_tube_len = 0
     blue_tube_temp = np.zeros((6))
+    blue_tube_len = 0
     white_tube_temp = np.zeros((6))
+    white_tube_len = 0
     black_tube_temp = np.zeros((6))
-
-    pdb.set_trace()
+    black_tube_len = 0
 
     move = randint(1,3)
+    pdb.set_trace()
 
     if move == 1: #flip
         print "flip"
         for i in range(6):
-            for j in range(12):
+            index = 0
+            for j in range(13):
                 if puzzle[i,j] == 1.0:
                     if i == 0: #red tube
-                        red_tube_temp = np.flipud(puzzle[i,0:j])
+                        red_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                red_tube_len = red_tube_len + 1
+                        break
                     elif i == 1:
-                        green_tube_temp = np.flipud(puzzle[i,0:j])
+                        green_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                green_tube_len = green_tube_len + 1
+                        break
                     elif i == 2:
-                        yellow_tube_temp = np.flipud(puzzle[i,0:j])
+                        yellow_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                yellow_tube_len = yellow_tube_len + 1
+                        break
                     elif i == 3:
-                        blue_tube_temp = np.flipud(puzzle[i,0:j])
+                        blue_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                blue_tube_len = blue_tube_len + 1
+                        break
                     elif i == 4:
-                        white_tube_temp = np.flipud(puzzle[i,0:j])
+                        white_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                white_tube_len = white_tube_len + 1
+                        break
                     elif i == 5:
-                        black_tube_temp = np.flipud(puzzle[i,0:j])
+                        black_tube_temp = np.flipud(puzzle[i,0:j].copy())
+                        for k in range(j,13):
+                            if puzzle[i,k] != 0:
+                                black_tube_len = black_tube_len + 1
+                        break
 
+        puzzle_temp = np.empty((6,13))
         for i in range(6):
             if i == 0:
                 for j in range(len(red_tube_temp)):
-                    puzzle[i,j] = red_tube_temp[i,j]
+                    puzzle[i,j] = red_tube_temp[j]
+                puzzle_temp[6-red_tube_len,:] = puzzle[i,:]
             if i == 1:
                 for j in range(len(green_tube_temp)):
-                    puzzle[i,j] = green_tube_temp[i,j]
+                    puzzle[i,j] = green_tube_temp[j]
+                puzzle_temp[6-green_tube_len,:] = puzzle[i,:]
             if i == 2:
                 for j in range(len(yellow_tube_temp)):
-                    puzzle[i,j] = yellow_tube_temp[i,j]
+                    puzzle[i,j] = yellow_tube_temp[j]
+                puzzle_temp[6-yellow_tube_len,:] = puzzle[i,:]
             if i == 3:
                 for j in range(len(blue_tube_temp)):
-                    puzzle[i,j] = blue_tube_temp[i,j]
+                    puzzle[i,j] = blue_tube_temp[j]
+                puzzle_temp[6-blue_tube_len,:] = puzzle[i,:]
             if i == 4:
                 for j in range(len(white_tube_temp)):
-                    puzzle[i,j] = white_tube_temp[i,j]
+                    puzzle[i,j] = white_tube_temp[j]
+                puzzle_temp[6-white_tube_len,:] = puzzle[i,:]
             if i == 5:
                 for j in range(len(black_tube_temp)):
-                    puzzle[i,j] = black_tube_temp[i,j]
+                    puzzle[i,j] = black_tube_temp[j]
+                puzzle_temp[6-black_tube_len,:] = puzzle[i,:]
 
+        puzzle = puzzle_temp
         make_move(num_moves, 2, puzzle)
 
 
     elif move == 2: #rotate down
         print "rotate right"
         for i in range(6):
-            for j in range(12):
+            for j in range(13):
                 if puzzle[i,j] == 0.0:
                     if i == 0: #red tube
-                        red_tube_temp = puzzle[i,6-i:j]
+                        red_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 1:
-                        green_tube_temp = puzzle[i,6-i:j]
+                        green_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 2:
-                        yellow_tube_temp = puzzle[i,6-i:j]
+                        yellow_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 3:
-                        blue_tube_temp = puzzle[i,6-i:j]
+                        blue_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 4:
-                        white_tube_temp = puzzle[i,6-i:j]
+                        white_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 5:
-                        black_tube_temp = puzzle[i,6-i:j]
+                        black_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
 
         for i in range(6):
-            for j in range(12):
+            for j in range(13):
                 if i == 0:
                     #drop into red tube
-                    temp_index = 0
-                    for k in range(j,12):
-                        if black_tube_temp[temp_index] == 0.0:
-                            break
-                        puzzle[i,k] = black_tube_temp[temp_index]
-                        temp_index = temp_index + 1
-                    break
+                    if j == 6:
+                        index = 0
+                        for k in range(j,j+len(black_tube_temp)):
+                            puzzle[i,k] = black_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(black_tube_temp),13):
+                            puzzle[i,k] = 0.0
+                        break
                 if i == 1:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if red_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = red_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 5:
+                        index = 0
+                        for k in range(j,j+len(red_tube_temp)):
+                            puzzle[i,k] = red_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(red_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 2:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if green_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = green_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 4:
+                        index = 0
+                        for k in range(j,j+len(green_tube_temp)):
+                            puzzle[i,k] = green_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(green_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 3:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if yellow_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = yellow_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 3:
+                        index = 0
+                        for k in range(j,j+len(yellow_tube_temp)):
+                            puzzle[i,k] = yellow_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(yellow_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 4:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if blue_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = blue_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 2:
+                        index = 0
+                        for k in range(j,j+len(blue_tube_temp)):
+                            puzzle[i,k] = blue_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(blue_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 5:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if white_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = white_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 1:
+                        index = 0
+                        for k in range(j,j+len(white_tube_temp)):
+                            puzzle[i,k] = white_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(white_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
 
         make_move(num_moves, 2, puzzle)
@@ -172,76 +211,77 @@ def make_move(num_moves, num_moves_left, puzzle):
     elif move == 3: #rotate up
         print "rotate left"
         for i in range(6):
-            for j in range(12):
+            for j in range(13):
                 if puzzle[i,j] == 0.0:
                     if i == 0: #red tube
-                        red_tube_temp = puzzle[i,6-i:j]
+                        red_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 1:
-                        green_tube_temp = puzzle[i,6-i:j]
+                        green_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 2:
-                        yellow_tube_temp = puzzle[i,6-i:j]
+                        yellow_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 3:
-                        blue_tube_temp = puzzle[i,6-i:j]
+                        blue_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 4:
-                        white_tube_temp = puzzle[i,6-i:j]
+                        white_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
                     elif i == 5:
-                        black_tube_temp = puzzle[i,6-i:j]
+                        black_tube_temp = np.trim_zeros(puzzle[i,6-i:j].copy())
 
         for i in range(6):
-            for j in range(12):
+            for j in range(13):
                 if i == 0:
                     #drop into red tube
-                    temp_index = 0
-                    for k in range(j,12):
-                        if green_tube_temp[temp_index] == 0.0:
-                            break
-                        puzzle[i,k] = green_tube_temp[temp_index]
-                        temp_index = temp_index + 1
-                    break
+                    if j == 6:
+                        index = 0
+                        for k in range(j,j+len(green_tube_temp)):
+                            puzzle[i,k] = green_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(green_tube_temp),13):
+                            puzzle[i,k] = 0.0
+                        break
                 if i == 1:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if yellow_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = yellow_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 5:
+                        index = 0
+                        for k in range(j,j+len(yellow_tube_temp)):
+                            puzzle[i,k] = yellow_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(yellow_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 2:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if blue_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = blue_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 4:
+                        index = 0
+                        for k in range(j,j+len(blue_tube_temp)):
+                            puzzle[i,k] = blue_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(blue_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 3:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if white_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = white_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 3:
+                        index = 0
+                        for k in range(j,j+len(white_tube_temp)):
+                            puzzle[i,k] = white_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(white_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 4:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if black_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = black_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 2:
+                        index = 0
+                        for k in range(j,j+len(black_tube_temp)):
+                            puzzle[i,k] = black_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(black_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
                 if i == 5:
-                    if puzzle[i,j] == 1:
-                        temp_index = 0
-                        for k in range(j,12):
-                            if red_tube_temp[temp_index] == 0.0:
-                                break
-                            puzzle[i,k] = red_tube_temp[temp_index]
-                            temp_index = temp_index + 1
+                    if j == 1:
+                        index = 0
+                        for k in range(j,j+len(red_tube_temp)):
+                            puzzle[i,k] = red_tube_temp[index]
+                            index = index + 1
+                        for k in range(j+len(red_tube_temp),13):
+                            puzzle[i,k] = 0.0
                         break
 
         make_move(num_moves, 2, puzzle)
