@@ -193,7 +193,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(black_tube[black_tube > 0]) - 1
-                puzzle[0,6:6+size_of_upper_tube] = black_tube[1:size_of_upper_tube+1]
+                puzzle[0,6:6+size_of_upper_tube] = black_tube[1:1+size_of_upper_tube]
                 puzzle[0,6+size_of_upper_tube:13] = 0
 
         if i == 1:
@@ -210,7 +210,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(red_tube[red_tube > 0]) - 6
-                puzzle[1,5:5+size_of_upper_tube] = red_tube[6:size_of_upper_tube+1]
+                puzzle[1,5:5+size_of_upper_tube] = red_tube[6:6+size_of_upper_tube]
                 puzzle[1,5+size_of_upper_tube:13] = 0
 
         if i == 2:
@@ -227,7 +227,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(green_tube[green_tube > 0]) - 5
-                puzzle[i,4:4+size_of_upper_tube] = green_tube[5:size_of_upper_tube+1]
+                puzzle[i,4:4+size_of_upper_tube] = green_tube[5:5+size_of_upper_tube]
                 puzzle[i,4+size_of_upper_tube:13] = 0
 
         if i == 3:
@@ -244,7 +244,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(yellow_tube[yellow_tube > 0]) - 4
-                puzzle[i,3:3+size_of_upper_tube] = yellow_tube[4:size_of_upper_tube+1]
+                puzzle[i,3:3+size_of_upper_tube] = yellow_tube[4:4+size_of_upper_tube]
                 puzzle[i,3+size_of_upper_tube:13] = 0
 
         if i == 4:
@@ -261,7 +261,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(blue_tube[blue_tube > 0]) - 3
-                puzzle[i,2:2+size_of_upper_tube] = blue_tube[3:size_of_upper_tube+1]
+                puzzle[i,2:2+size_of_upper_tube] = blue_tube[3:3+size_of_upper_tube]
                 puzzle[i,2+size_of_upper_tube:13] = 0
 
         if i == 5:
@@ -278,7 +278,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
             else:
                 # index_of_first_empty_spot = np.where(black_tube == 1)[0][0]
                 size_of_upper_tube = len(white_tube[white_tube > 0]) - 2
-                puzzle[i,1:1+size_of_upper_tube] = white_tube[2:size_of_upper_tube+1]
+                puzzle[i,1:1+size_of_upper_tube] = white_tube[2:2+size_of_upper_tube]
                 puzzle[i,1+size_of_upper_tube:13] = 0
 
     return puzzle
@@ -410,7 +410,83 @@ def rotate_backwards_upwards(puzzle, tubes_that_fell, dropped_tubes):
 
     return puzzle
 
+def flip(puzzle):
+    print "flip"
+    puzzle_temp = np.zeros((6,13))
+    red_tube = puzzle[0,:]
+    green_tube = puzzle[1,:]
+    yellow_tube = puzzle[2,:]
+    blue_tube = puzzle[3,:]
+    white_tube = puzzle[4,:]
+    black_tube = puzzle[5,:]
+
+    for i in range(6):
+        if i == 0:
+            # find the size of the top tube
+            # flip
+            # reorder 0's and 1's
+            # store in index ^^
+            pdb.set_trace()
+            size_vector = puzzle[i,6:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = red_tube[red_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            red_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = red_tube
+        if i == 1:
+            pdb.set_trace()
+            size_vector = puzzle[i,5:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = green_tube[green_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            green_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = green_tube
+        if i == 2:
+            pdb.set_trace()
+            size_vector = puzzle[i,4:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = yellow_tube[yellow_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            yellow_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = yellow_tube
+        if i == 3:
+            pdb.set_trace()
+            size_vector = puzzle[i,3:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = blue_tube[blue_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            blue_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = blue_tube
+        if i == 4:
+            pdb.set_trace()
+            size_vector = puzzle[i,2:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = white_tube[white_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            white_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = white_tube
+        if i == 5:
+            pdb.set_trace()
+            size_vector = puzzle[i,1:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = black_tube[black_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            black_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = black_tube
+
+    return puzzle
+
 pdb.set_trace()
+filled_tubes = find_filled_tubes(puzzle)
+filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
+filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random, 0)
+tubes_that_fell = generate_random_ball_drops(filled_tubes_verified, puzzle)
+puzzle = rotate_backwards_downwards(puzzle, tubes_that_fell, filled_tubes_verified)
+
+pdb.set_trace()
+
+puzzle = flip(puzzle)
+
 filled_tubes = find_filled_tubes(puzzle)
 filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
 filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random, 0)
