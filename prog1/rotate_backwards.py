@@ -127,7 +127,7 @@ def generate_random_ball_drops(potential_dropped_tubes, puzzle):
             pdb.set_trace()
             print "failed rand"
         #extract the previous upper_tube
-        pdb.set_trace()
+        # pdb.set_trace()
         prev_upper_tube = puzzle[potential_dropped_tubes[i],
                     6-potential_dropped_tubes[i]-rand_num_balls:6-potential_dropped_tubes[i]].copy()
         #remove the rand_num_balls from the current tube
@@ -352,7 +352,7 @@ def rotate_backwards_downwards(puzzle, tubes_that_fell, dropped_tubes):
 
     return puzzle
 
-def rotate_backwards_upwards(puzzle, tubes_that_fell, dropped_tubes):
+# def rotate_backwards_upwards(puzzle, tubes_that_fell, dropped_tubes):
     # store puzzle vectors in temp vectors
     # iterate through puzzle
     # if i+1 = dropped_tubes
@@ -567,10 +567,10 @@ def flip(puzzle):
         pdb.set_trace()
         print "failed 1.0"
 
-k = input("Please enter the number of moves to shuffle the puzzle: ")
-print "Number of moves = " + str(k)
+# k = input("Please enter the number of moves to shuffle the puzzle: ")
+# print "Number of moves = " + str(k)
 
-for i in range(k):
+# for i in range(k):
 
     rand_move = np.random.randint(0,2)
     if rand_move == 0:
@@ -596,13 +596,13 @@ for i in range(k):
             print "wrong"
 
 pdb.set_trace()
-# filled_tubes = find_filled_tubes(puzzle)
-# filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
-# filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random, 0)
-# tubes_that_fell = generate_random_ball_drops(filled_tubes_verified, puzzle)
+filled_tubes = find_filled_tubes(puzzle)
+filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
+filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random, 0)
+tubes_that_fell = generate_random_ball_drops(filled_tubes_verified, puzzle)
 # puzzle = rotate_backwards_downwards(puzzle, tubes_that_fell, filled_tubes_verified)
 #
-# pdb.set_trace()
+pdb.set_trace()
 #
 # puzzle = flip(puzzle)
 #
