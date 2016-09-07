@@ -378,6 +378,8 @@ pdb.set_trace()
 # puzzle = call_rotate(puzzle, 0)
 # puzzle = rotate_up(puzzle)
 puzzle = call_rotate(puzzle, 1)
+puzzle = call_rotate(puzzle, 0)
+pdb.set_trace()
 puzzle = rotate_normal(puzzle, 1)
 pdb.set_trace()
 print "play the game"

@@ -1,4 +1,4 @@
-    import numpy as np
+import numpy as np
 import pdb
 
 puzzle = np.zeros((6,13))
@@ -45,7 +45,7 @@ def extract_rand_num_of_filled_tubes(filled_tubes):
 
 #verify that no tubes where balls have been dropped are adjacent in the
     #in the direction of the turn
-def verify_adjacent_tubes(filled_tubes_random):
+def verify_adjacent_tubes(filled_tubes_random, num_consecutive_moves):
     # add 1 to all values
     # loop through
     # if [i]+1 == [i+1]
@@ -60,23 +60,65 @@ def verify_adjacent_tubes(filled_tubes_random):
             # this ^^ is the number of tubes that need to be in a row
         # select random tubes from filled_tubes_random, go x steps right/left -- these are how many in a row
 
+        # random_tubes_index = 0
+        # num_tube = 1
+        # while 1:
+        #     for i in num_consec_moves
+        #         if random_tubes_index == 6:
+        #             random_tubes_index = 0
+        #
+        #         if filled_tubes_random[random_tubes_index]+1 in filled_tubes_random:
+        #             increment random_tubes_index
+        #         else:
+        #             filled_tubes_random insert (random_tubes_index+i) = filled_tubes_random[random_tubes_index] + 1
+        #             increment random_tubes_index
+        #
+        #     increment random_tubes_index
+            # if len(filled_tubes_random) == num_tubes:
+            #     nbreak
 
-    filled_tubes_random = filled_tubes_random + 1
-    for i in range(len(filled_tubes_random)-1):
-        if filled_tubes_random[i]+1 == filled_tubes_random[i+1]:
-            rand_deletion = np.random.randint(2)
-            filled_tubes_random[i+rand_deletion] = 0
+    current_index = 0
+    num_tubes = 1
+    while 1:
+        for i in range(num_consecutive_moves):
 
-    if filled_tubes_random[0] == filled_tubes_random[len(filled_tubes_random)-1]-5:
-            rand_deletion = np.random.randint(2)
-            if rand_deletion == 0:
-                filled_tubes_random[0] = 0
+            if current_index == 6: current_index = -1
+
+            if filled_tubes_random[current_index] == 5:
+                next_tube = 0
             else:
-                filled_tubes_random[len(filled_tubes_random)-1] = 0
+                next_tube = filled_tubes_random[current_index] + 1
 
-    filled_tubes_random = filled_tubes_random[filled_tubes_random > 0]
-    filled_tubes_random = filled_tubes_random - 1
-    return filled_tubes_random
+            if next_tube not in filled_tubes_random:
+                filled_tubes_random = np.insert(filled_tubes_random, current_index+1, next_tube)
+                current_index = current_index + 1
+
+            # if num_consecutive_moves != 1:
+            #     current_index = current_index + 1
+            num_tubes = num_tubes + 1
+
+        current_index = current_index + 1
+        if len(filled_tubes_random) <= num_tubes:
+            break
+
+
+
+    # filled_tubes_random = filled_tubes_random + 1
+    # for i in range(len(filled_tubes_random)-1):
+    #     if filled_tubes_random[i]+1 == filled_tubes_random[i+1]:
+    #         rand_deletion = np.random.randint(2)
+    #         filled_tubes_random[i+rand_deletion] = 0
+    #
+    # if filled_tubes_random[0] == filled_tubes_random[len(filled_tubes_random)-1]-5:
+    #         rand_deletion = np.random.randint(2)
+    #         if rand_deletion == 0:
+    #             filled_tubes_random[0] = 0
+    #         else:
+    #             filled_tubes_random[len(filled_tubes_random)-1] = 0
+    #
+    # filled_tubes_random = filled_tubes_random[filled_tubes_random > 0]
+    # filled_tubes_random = filled_tubes_random - 1
+    return np.sort(filled_tubes_random)
 
 def generate_random_ball_drops(potential_dropped_tubes, puzzle, direction):
     #generate random extraction from filled_tubes_verified
@@ -98,9 +140,33 @@ def generate_random_ball_drops(potential_dropped_tubes, puzzle, direction):
     upper_blue_tube = np.zeros((6))
     upper_white_tube = np.zeros((6))
     upper_black_tube = np.zeros((6))
+
     #TODO
-        # find tubes where balls will fall based on direction
-        
+        # find empty tubes next to filled tubes in the right direction
+
+    pdb.set_trace()
+    drop_tubes = []
+    for i in range(len(potential_dropped_tubes)):
+        if direction == 0:
+            if potential_dropped_tubes[i] == 0: potential_empty_index = 5
+            else: potential_empty_index = potential_dropped_tubes[i]-1
+
+            if potential_empty_index == 5: next_index = 0
+            else: next_index = potential_empty_index+1
+
+        else:
+            if potential_dropped_tubes[i] == 5: potential_empty_index = 0
+            else: potential_empty_index = potential_dropped_tubes[i]+1
+
+            if potential_empty_index == 0: next_index = 5
+            else: next_index = potential_empty_index-1
+
+        if potential_empty_index not in potential_dropped_tubes and next_index in potential_dropped_tubes:
+            drop_tubes.append(potential_empty_index)
+
+
+    pdb.set_trace()
+
     if direction == 0:
         potential_dropped_tubes = potential_dropped_tubes + 1
         if 6 in potential_dropped_tubes:
@@ -219,8 +285,9 @@ def call_rotate(puzzle, direction):
 
     filled_tubes = find_filled_tubes(puzzle)
     filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
-    filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random)
-    balls_that_fell, index_fell_from = generate_random_ball_drops(filled_tubes_verified, puzzle, direction)
+    # if num_consec_moves > 1 call the below function
+    filled_tubes_random = verify_adjacent_tubes(filled_tubes_random,2)
+    balls_that_fell, index_fell_from = generate_random_ball_drops(filled_tubes_random, puzzle, direction)
 
     current_tubes = {
         0: puzzle[0,:].copy(),
@@ -332,6 +399,8 @@ def flip(puzzle):
     except:
         pdb.set_trace()
         print "failed 1.0"
+
+
 
 puzzle = call_rotate(puzzle, 0)
 pdb.set_trace()
