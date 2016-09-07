@@ -54,6 +54,13 @@ def verify_adjacent_tubes(filled_tubes_random):
     #     arr[arr > 0]
     # decrement all values by 1
     # filled_tubes_random = np.array([0,1,2,3,4,5])
+
+    #TODO
+        # take number of consecutive moves as a parameter
+            # this ^^ is the number of tubes that need to be in a row
+        # select random tubes from filled_tubes_random, go x steps right/left -- these are how many in a row
+
+
     filled_tubes_random = filled_tubes_random + 1
     for i in range(len(filled_tubes_random)-1):
         if filled_tubes_random[i]+1 == filled_tubes_random[i+1]:
@@ -84,12 +91,16 @@ def generate_random_ball_drops(potential_dropped_tubes, puzzle, direction):
         #splice off all values above the fill line
     #by this point we will have temp variables where all we need to do is place them above the fill lines of the puzzle
 
+
     upper_red_tube = np.zeros((6))
     upper_green_tube = np.zeros((6))
     upper_yellow_tube = np.zeros((6))
     upper_blue_tube = np.zeros((6))
     upper_white_tube = np.zeros((6))
     upper_black_tube = np.zeros((6))
+    #TODO
+        # find tubes where balls will fall based on direction
+        
     if direction == 0:
         potential_dropped_tubes = potential_dropped_tubes + 1
         if 6 in potential_dropped_tubes:
@@ -209,7 +220,7 @@ def call_rotate(puzzle, direction):
     filled_tubes = find_filled_tubes(puzzle)
     filled_tubes_random = extract_rand_num_of_filled_tubes(filled_tubes)
     filled_tubes_verified = verify_adjacent_tubes(filled_tubes_random)
-    balls_that_fell, index_fell_from = generate_random_ball_drops(filled_tubes_verified, puzzle, 0)
+    balls_that_fell, index_fell_from = generate_random_ball_drops(filled_tubes_verified, puzzle, direction)
 
     current_tubes = {
         0: puzzle[0,:].copy(),
