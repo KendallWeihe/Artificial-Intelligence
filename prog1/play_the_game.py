@@ -55,6 +55,9 @@ def make_move(num_moves, num_moves_left, puzzle):
     move = randint(1,3)
     pdb.set_trace()
 
+    move = input("enter move: 1=flip, 2=rotate_down, 3=rotate_up")
+    # print "Number of moves = " + str(k)
+
     if move == 1: #flip
         print "flip"
         for i in range(6):
@@ -288,6 +291,7 @@ def make_move(num_moves, num_moves_left, puzzle):
 
     print
 
-k = input("Please enter the number of moves to shuffle the puzzle: ")
-print "Number of moves = " + str(k)
-make_move(k,k,solved_puzzle)
+# k = input("Please enter the number of moves to shuffle the puzzle: ")
+# print "Number of moves = " + str(k)
+# make_move(k,k,solved_puzzle)
+make_move(1,1,solved_puzzle)

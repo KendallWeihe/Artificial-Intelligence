@@ -1,3 +1,4 @@
+
 import numpy as np
 import pdb
 
@@ -322,16 +323,61 @@ def flip(puzzle):
         pdb.set_trace()
         print "failed 1.0"
 
-puzzle = call_rotate(puzzle, 0)
-pdb.set_trace()
-puzzle = call_rotate(puzzle, 1)
-pdb.set_trace()
-puzzle = flip(puzzle)
-pdb.set_trace()
-puzzle = call_rotate(puzzle, 0)
-pdb.set_trace()
-puzzle = flip(puzzle)
-pdb.set_trace()
-puzzle = call_rotate(puzzle, 0)
-pdb.set_trace()
+# puzzle = call_rotate(puzzle, 0)
+# pdb.set_trace()
+# puzzle = call_rotate(puzzle, 1)
+# pdb.set_trace()
+# puzzle = flip(puzzle)
+# pdb.set_trace()
+# puzzle = call_rotate(puzzle, 0)
+# pdb.set_trace()
+# puzzle = flip(puzzle)
+# pdb.set_trace()
+# puzzle = call_rotate(puzzle, 0)
+# pdb.set_trace()
 print
+
+def rotate_normal(puzzle,direction):
+    # store temps for each tube
+    # for each tube
+    #     find size of upper tube
+    #     find end of balls of next tube
+    #     find length of new tube
+    #     place in range min(eob,fill line) to min(eob,fill_line)+size_of_upper_tube
+    tubes = {
+        0: puzzle[0,:].copy(),
+        1: puzzle[1,:].copy(),
+        2: puzzle[2,:].copy(),
+        3: puzzle[3,:].copy(),
+        4: puzzle[4,:].copy(),
+        5: puzzle[5,:].copy()
+    }
+    pdb.set_trace()
+    for i in range(6):
+        if direction == 0:
+            if i == 5: prev_tube_index = 0
+            else: prev_tube_index = i+1
+        else:
+            if i == 0: prev_tube_index = 5
+            else: prev_tube_index = i-1
+
+        prev_tube = tubes[prev_tube_index]
+        len_of_prev_upper_tube = len(prev_tube[prev_tube > 0]) - (6-prev_tube_index)
+        current_tube = tubes[i]
+        end_of_balls_index = len(current_tube[current_tube > 1])
+        len_new_tube = (6-i) + len_of_prev_upper_tube
+
+        puzzle[i, min(end_of_balls_index,(6-i)):min(end_of_balls_index,(6-i))+len_of_prev_upper_tube] = prev_tube[(6-prev_tube_index):(6-prev_tube_index)+len_of_prev_upper_tube]
+        puzzle[i, min(end_of_balls_index,(6-i))+len_of_prev_upper_tube:len_new_tube] = 1
+        puzzle[i, len_new_tube:13] = 0
+    return puzzle
+
+
+
+pdb.set_trace()
+# puzzle = call_rotate(puzzle, 0)
+# puzzle = rotate_up(puzzle)
+puzzle = call_rotate(puzzle, 1)
+puzzle = rotate_normal(puzzle, 1)
+pdb.set_trace()
+print "play the game"
