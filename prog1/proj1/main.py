@@ -1,17 +1,6 @@
 import numpy as np
 import pdb
 
-puzzle = np.zeros((6,13))
-for i in range(6):
-    puzzle[i,6-i:12-i*2] = 1
-
-puzzle[0,0:6] = 2
-puzzle[1,0:5] = 3
-puzzle[2,0:4] = 4
-puzzle[3,0:3] = 5
-puzzle[4,0:2] = 6
-puzzle[5,0:1] = 7
-
 def find_filled_tubes(puzzle):
 
     filled_tubes = []
@@ -22,8 +11,6 @@ def find_filled_tubes(puzzle):
         if len(lower_tube[lower_tube > 1]) == 6-i:
             filled_tubes.append(i)
 
-    # pdb.set_trace()
-    # print "testing filled_tubes"
     return np.array(filled_tubes)
 
 #extract random number of filled tubes
@@ -137,48 +124,6 @@ def rotate(temp_puzzle, puzzle, current_tube, previous_tube, i, balls_that_fell,
             puzzle[i,min(end_of_balls_index,6-i)+len_of_prev_upper_tube:len_new_tube] = 1
         puzzle[i,len_new_tube:13] = 0
 
-        if i == 5:
-            two_count = 0
-            three_count = 0
-            four_count = 0
-            five_count = 0
-            six_count = 0
-            seven_count = 0
-            for i in range(6):
-                for j in range(13):
-                    if puzzle[i,j] == 2:
-                        two_count = two_count+1
-                    elif puzzle[i,j] == 3:
-                        three_count = three_count+1
-                    elif puzzle[i,j] == 4:
-                        four_count = four_count+1
-                    elif puzzle[i,j] == 5:
-                        five_count = five_count+1
-                    elif puzzle[i,j] == 6:
-                        six_count = six_count+1
-                    elif puzzle[i,j] == 7:
-                        seven_count = seven_count+1
-
-            if two_count != 6:
-                pdb.set_trace()
-                print "error"
-            if three_count != 5:
-                pdb.set_trace()
-                print "error"
-            if four_count != 4:
-                pdb.set_trace()
-                print "error"
-            if five_count != 3:
-                pdb.set_trace()
-                print "error"
-            if six_count != 2:
-                pdb.set_trace()
-                print "error"
-            if seven_count != 1:
-                pdb.set_trace()
-                print "error"
-
-
         return puzzle, falling_balls_index
     except:
         pdb.set_trace()
@@ -204,7 +149,7 @@ def check_if_legal_move(puzzle, current_tubes, next_tubes, direction):
         num_balls_in_current_tube = len(current_tube[current_tube > 1])
 
         if num_balls_in_next_tube < next_tube_capacity and num_balls_in_current_tube > current_tube_capacity:
-            print "this is an illegal move"
+            # print "this is an illegal move"
             # pdb.set_trace()
             return False
 
@@ -276,15 +221,12 @@ def call_rotate(puzzle, direction, num_in_a_row):
         for i in range(6):
             puzzle, falling_balls_index = rotate(temp_puzzle, puzzle, current_tubes[i], previous_tubes[i], i, balls_that_fell, index_balls_fell_into, direction, falling_balls_index)
         # pdb.set_trace()
-        print
-    else:
-        print "this is an illegal move"
 
     # pdb.set_trace()
     return puzzle, is_legal
 
 def flip(puzzle):
-    print "flip"
+    # print "flip"
     puzzle_temp = np.zeros((6,13))
     red_tube = puzzle[0,:].copy()
     green_tube = puzzle[1,:].copy()
@@ -293,73 +235,55 @@ def flip(puzzle):
     white_tube = puzzle[4,:].copy()
     black_tube = puzzle[5,:].copy()
 
-    for j in range(5,0,-1):
-        temp = puzzle[j,:].copy()
-        if len(temp[temp>0]) == 6-j or len(temp[temp>0]) < 6-j:
-            pdb.set_trace()
-            print "wrong3.0"
+    for i in range(6):
+        if i == 0:
+            # find the size of the top tube
+            # flip
+            # reorder 0's and 1's
+            # store in index ^^
+            size_vector = red_tube[6:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = red_tube[red_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            red_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = red_tube
+        if i == 1:
+            size_vector = green_tube[5:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = green_tube[green_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            green_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = green_tube
+        if i == 2:
+            size_vector = yellow_tube[4:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = yellow_tube[yellow_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            yellow_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = yellow_tube
+        if i == 3:
+            size_vector = blue_tube[3:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = blue_tube[blue_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            blue_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = blue_tube
+        if i == 4:
+            size_vector = white_tube[2:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = white_tube[white_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            white_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = white_tube
+        if i == 5:
+            size_vector = black_tube[1:13]
+            top_tube_size = len(size_vector[size_vector > 0])
+            flip_vector = black_tube[black_tube > 1]
+            flip_vector = np.flipud(flip_vector)
+            black_tube[0:len(flip_vector)] = flip_vector
+            puzzle[6-top_tube_size,:] = black_tube
 
-    try:
-        for i in range(6):
-            if i == 0:
-                # find the size of the top tube
-                # flip
-                # reorder 0's and 1's
-                # store in index ^^
-                size_vector = red_tube[6:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = red_tube[red_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                red_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = red_tube
-            if i == 1:
-                size_vector = green_tube[5:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = green_tube[green_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                green_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = green_tube
-            if i == 2:
-                size_vector = yellow_tube[4:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = yellow_tube[yellow_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                yellow_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = yellow_tube
-            if i == 3:
-                size_vector = blue_tube[3:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = blue_tube[blue_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                blue_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = blue_tube
-            if i == 4:
-                size_vector = white_tube[2:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = white_tube[white_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                white_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = white_tube
-            if i == 5:
-                size_vector = black_tube[1:13]
-                top_tube_size = len(size_vector[size_vector > 0])
-                flip_vector = black_tube[black_tube > 1]
-                flip_vector = np.flipud(flip_vector)
-                black_tube[0:len(flip_vector)] = flip_vector
-                puzzle[6-top_tube_size,:] = black_tube
-
-        for j in range(5,0,-1):
-            temp = puzzle[j,:].copy()
-            if len(temp[temp>0]) == 5-j or len(temp[temp>0]) < 5-j:
-                pdb.set_trace()
-                print "wrong4.0"
-
-
-        return puzzle
-
-    except:
-        pdb.set_trace()
-        print "failed 1.0"
+    return puzzle
 
 def forward_rotate(puzzle, direction):
 
@@ -401,65 +325,67 @@ def forward_rotate(puzzle, direction):
 
 k = input("Please enter the number of moves you would like to shuffle the puzzle: ")
 
-random_sequence = []
-for i in range(k):
-    random_sequence.append(np.random.randint(0,3))
 
-random_sequence = np.array(random_sequence)
-for i in range(len(random_sequence)):
-    look_ahead = 1
-    for j in range(len(random_sequence)-1):
-        if random_sequence[j] == random_sequence[j+1]:
-            look_ahead = look_ahead + 1
+solved = False
+while not solved:
+
+    puzzle = np.zeros((6,13))
+    for i in range(6):
+        puzzle[i,6-i:12-i*2] = 1
+
+    puzzle[0,0:6] = 2
+    puzzle[1,0:5] = 3
+    puzzle[2,0:4] = 4
+    puzzle[3,0:3] = 5
+    puzzle[4,0:2] = 6
+    puzzle[5,0:1] = 7
+
+    random_sequence = []
+    for i in range(k):
+        random_sequence.append(np.random.randint(0,3))
+
+    random_sequence = np.array(random_sequence)
+    for i in range(len(random_sequence)):
+        look_ahead = 1
+        for j in range(len(random_sequence)-1):
+            if random_sequence[j] == random_sequence[j+1]:
+                look_ahead = look_ahead + 1
+            else:
+                break
+
+        is_legal = True
+        if random_sequence[i] == 0:
+            puzzle, is_legal = call_rotate(puzzle, 0, look_ahead)
+        elif random_sequence[i] == 1:
+            puzzle, is_legal = call_rotate(puzzle, 1, look_ahead)
         else:
-            break
+            puzzle = flip(puzzle)
 
-    is_legal = True
-    if random_sequence[i] == 0:
-        puzzle, is_legal = call_rotate(puzzle, 0, look_ahead)
-    elif random_sequence[i] == 1:
-        puzzle, is_legal = call_rotate(puzzle, 1, look_ahead)
-    else:
-        puzzle = flip(puzzle)
+        if is_legal == False:
+            random_sequence = np.append(random_sequence, np.random.randint(3))
+            random_sequence[i] = -1
 
-    if is_legal == False:
-        random_sequence[i] = -1
+    random_sequence = random_sequence[random_sequence > -1]
+    backwards_sequence = np.flipud(random_sequence)
+
+    for i in range(len(backwards_sequence)):
+        if backwards_sequence[i] == 0:
+            puzzle = forward_rotate(puzzle, 1)
+        elif backwards_sequence[i] == 1:
+            puzzle = forward_rotate(puzzle, 0)
+        else:
+            puzzle = flip(puzzle)
+
+
+    red_tube = (puzzle[0,:] == [ 2.,  2.,  2.,  2.,  2.,  2.,  1.,  1.,  1.,  1.,  1.,  1.,  0.])
+    green_tube = (puzzle[1,:] == [ 3.,  3.,  3.,  3.,  3.,  1.,  1.,  1.,  1.,  1.,  0.,  0.,  0.])
+    yellow_tube = (puzzle[2,:] == [ 4.,  4.,  4.,  4.,  1.,  1.,  1.,  1.,  0.,  0.,  0.,  0.,  0.])
+    blue_tube = (puzzle[3,:] == [ 5.,  5.,  5.,  1.,  1.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+    white_tube = (puzzle[4,:] == [ 6.,  6.,  1.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+    black_tube = (puzzle[5,:] == [ 7.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+
+    if np.sum(red_tube) == np.sum(green_tube) == np.sum(yellow_tube) == np.sum(blue_tube) == np.sum(white_tube) == np.sum(black_tube):
+        solved = True
 
 pdb.set_trace()
-random_sequence = random_sequence[random_sequence > -1]
-backwards_sequence = np.flipud(random_sequence)
-
-for i in range(len(backwards_sequence)):
-    if backwards_sequence[i] == 0:
-        puzzle = forward_rotate(puzzle, 1)
-    elif backwards_sequence[i] == 1:
-        puzzle = forward_rotate(puzzle, 0)
-    else:
-        puzzle = flip(puzzle)
-
-
-
-pdb.set_trace()
-# puzzle = call_rotate(puzzle, 0, 2)
-# # pdb.set_trace()
-# puzzle = call_rotate(puzzle, 0, 1)
-# # pdb.set_trace()
-# puzzle = flip(puzzle)
-# # puzzle = flip(puzzle)
-# # pdb.set_trace()
-# puzzle = call_rotate(puzzle, 1, 1)
-# # pdb.set_trace()
-# puzzle = flip(puzzle)
-# # pdb.set_trace()
-# puzzle = call_rotate(puzzle, 1, 1)
-# # pdb.set_trace()
-#
-# puzzle = forward_rotate(puzzle, 0)
-# puzzle = flip(puzzle)
-# puzzle = forward_rotate(puzzle, 0)
-# puzzle = flip(puzzle)
-# puzzle = forward_rotate(puzzle, 1)
-# puzzle = forward_rotate(puzzle, 1)
-# pdb.set_trace()
-
 print
