@@ -3,6 +3,7 @@ import numpy as np
 import heapq
 import pdb
 import Queue as Q
+from itertools import count
 
 #TODO
     # read in mixed puzzle files
@@ -226,23 +227,24 @@ def compute_heuristic(puzzle_state, solved_puzzle):
     part_3 = balls_in_correct_place(puzzle_state, solved_puzzle)
     return part_1 + part_2 + part_3
 
-def explore_children(current_node, priority_queue, solved_puzzle):
+def explore_children(current_node, priority_queue, solved_puzzle, tiebreaker):
     # print "exploring children"
     try:
         for i in range(3):
 
             if i == 2:
-                child_node_puzzle_state = flip(current_node[2].copy())
+                child_node_puzzle_state = flip(current_node[3].copy())
             else:
-                child_node_puzzle_state = rotate(current_node[2].copy(), i)
-            # print current_node[2]
+                child_node_puzzle_state = rotate(current_node[3].copy(), i)
+            # print current_node[3]
             # print "\n\n"
             # print child_node_puzzle_state
             h = compute_heuristic(child_node_puzzle_state, solved_puzzle)
             depth = current_node[1] + 1
             f = h + depth
             temp = [depth, child_node_puzzle_state]
-            heapq.heappush(priority_queue, [f, depth, child_node_puzzle_state])
+            # pdb.set_trace()
+            heapq.heappush(priority_queue, [f, depth, next(tiebreaker), child_node_puzzle_state])
             # priority_queue.put((f, depth, child_node_puzzle_state))
 
         return priority_queue
@@ -265,35 +267,35 @@ def is_solved(puzzle_state, solved_puzzle):
 
 def main():
     # print "main"
-    priority_queue = []
     # priority_queue tuple has the following structure: heuristic, depth (or the cost), puzzle state
-    heapq.heappush(priority_queue, (5,[0,puzzle]))
     # priority_queue = Q.PriorityQueue()
     # priority_queue.put((5,0,puzzle))
     solved = False
     starting_depth = input("Please enter the depth at which you want the IDA* search algorithm to start: ")
     depth = starting_depth - 1
-    count = 0
+    move_count = 0
     while not solved:
+        priority_queue = []
+        heapq.heappush(priority_queue, (5,0,-1,puzzle))
         depth = depth + 1
         current_depth = 0
+        tiebreaker = count()
         while current_depth < depth and not solved:
             current_node = heapq.heappop(priority_queue)
-            # pdb.set_trace()
             # current_node = priority_queue.get()
             # pdb.set_trace()
-            np.savetxt("puzzle.csv", current_node[2], delimiter=",")
-            if is_solved(current_node[2], solved_puzzle):
+            np.savetxt("puzzle.csv", current_node[3], delimiter=",")
+            if is_solved(current_node[3], solved_puzzle):
                 solved = True
             else:
-                priority_queue = explore_children(current_node, priority_queue, solved_puzzle)
+                priority_queue = explore_children(current_node, priority_queue, solved_puzzle, tiebreaker)
                 # print
             current_depth = current_depth + 1
-            count = count+1
-            if count % 100 == 0:
-                print count
-    return count
+            move_count = move_count+1
+            if move_count % 100 == 0:
+                print move_count
+    return move_count
 
-main()
+move_count = main()
 pdb.set_trace()
 print
