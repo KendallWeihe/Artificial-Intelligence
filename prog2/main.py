@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import heapq
 import pdb
+import Queue as Q
 
 #TODO
     # read in mixed puzzle files
@@ -239,7 +240,10 @@ def explore_children(current_node, priority_queue, solved_puzzle):
             # print child_node_puzzle_state
             h = compute_heuristic(child_node_puzzle_state, solved_puzzle)
             depth = current_node[1] + 1
-            heapq.heappush(priority_queue, (h, depth, child_node_puzzle_state))
+            f = h + depth
+            temp = [depth, child_node_puzzle_state]
+            heapq.heappush(priority_queue, [f, depth, child_node_puzzle_state])
+            # priority_queue.put((f, depth, child_node_puzzle_state))
 
         return priority_queue
 
@@ -263,7 +267,9 @@ def main():
     # print "main"
     priority_queue = []
     # priority_queue tuple has the following structure: heuristic, depth (or the cost), puzzle state
-    heapq.heappush(priority_queue, (5,0,puzzle))
+    heapq.heappush(priority_queue, (5,[0,puzzle]))
+    # priority_queue = Q.PriorityQueue()
+    # priority_queue.put((5,0,puzzle))
     solved = False
     starting_depth = input("Please enter the depth at which you want the IDA* search algorithm to start: ")
     depth = starting_depth - 1
@@ -274,6 +280,8 @@ def main():
         while current_depth < depth and not solved:
             current_node = heapq.heappop(priority_queue)
             # pdb.set_trace()
+            # current_node = priority_queue.get()
+            # pdb.set_trace()
             np.savetxt("puzzle.csv", current_node[2], delimiter=",")
             if is_solved(current_node[2], solved_puzzle):
                 solved = True
@@ -282,7 +290,8 @@ def main():
                 # print
             current_depth = current_depth + 1
             count = count+1
-            print count
+            if count % 100 == 0:
+                print count
     return count
 
 main()
