@@ -281,24 +281,19 @@ function magicSolve(){
   getKFromSolvedState(board,Number($("#kmoves").val()));
   console.log(board)
 
-  var top = "data:text/csv;charset=utf-8,"
-  var size = board.state.topPlace
-  top += size + "\n"
-  var row;
+  var top = "data:text/csv;charset=utf-8,\n"
+  var top_location = "data:text/csv;charset=utf-8,\n" + board.state.topPlace
   var i;
   for (i=0; i<6; i++){
     top += board.state.top[i] + "\n"
   }
 
-  var bottom = "data:text/csv;charset=utf-8,"
-  var size = board.state.bottomPlace
-  // console.log(pboard.state.bottomPlace)
-  bottom += size + "\n"
+  var bottom = "data:text/csv;charset=utf-8,\n"
+  var bottom_location = "data:text/csv;charset=utf-8,\n" + board.state.bottomPlace
   for (i=0; i<6; i++){
     // console.log(pboard.state.bottom[i])
     bottom += board.state.bottom[i] + "\n"
   }
-
 
   var encodedUri = encodeURI(bottom);
   var link = document.createElement("a");
@@ -307,12 +302,28 @@ function magicSolve(){
   document.body.appendChild(link); // Required for FF
   link.click();
 
+  var encodedUri = encodeURI(bottom_location);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "bottom_location.csv");
+  document.body.appendChild(link); // Required for FF
+  link.click();
+
+
   var encodedUri = encodeURI(top);
   var link = document.createElement("a");
   link.setAttribute("href", encodedUri);
   link.setAttribute("download", "top.csv");
   document.body.appendChild(link); // Required for FF
   link.click();
+
+  var encodedUri = encodeURI(top_location);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "top_location.csv");
+  document.body.appendChild(link); // Required for FF
+  link.click();
+
 }
 function GrandfatherParadox(){
   getKFromSolvedState(board,Number($("#kmoves").val()));
