@@ -179,6 +179,13 @@ if user_input == "Y" or user_input == "y":
     print solved_puzzle
     print "\n\n"
 
+#TODO 
+    # convert mixed numbers into reds = 1, greens = 2...
+    #     store temp solved states tubes
+    #     update solved puzzle
+    #     iterate through both puzzles (i,j)
+    #         find each tubes (^^) values inside unsolved puzzle, and change element value
+
 # --------------------------------------------------------------------------------------------------
 
 def tubes_aligned(puzzle_state):
