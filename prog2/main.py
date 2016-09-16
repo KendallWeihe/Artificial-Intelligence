@@ -306,9 +306,8 @@ def main():
     print current_node[4]
     return current_node
 
-
 solved_puzzles = []
-file_count = 0
+file_count = 988
 for i in range(5000):
 
     solved_puzzles.append(main())
