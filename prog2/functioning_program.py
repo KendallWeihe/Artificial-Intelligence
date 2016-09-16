@@ -245,9 +245,8 @@ def explore_children(current_node, priority_queue, solved_puzzle, tiebreaker):
             moves_to_solve = np.array(current_node[3]).copy()
             moves_to_solve = np.append(moves_to_solve, i)
             string_of_puzzle_states = np.array(current_node[5]).copy()
-            string_of_puzzle_states = np.vstack((string_of_puzzle_states, child_node_puzzle_state))
             # pdb.set_trace()
-            heapq.heappush(priority_queue, [f, depth, next(tiebreaker), moves_to_solve, child_node_puzzle_state, string_of_puzzle_states])
+            heapq.heappush(priority_queue, [f, depth, next(tiebreaker), moves_to_solve, child_node_puzzle_state])
             # priority_queue.put((f, depth, child_node_puzzle_state))
 
         return priority_queue
@@ -268,13 +267,13 @@ def is_solved(puzzle_state, solved_puzzle):
     else:
         return False
 
-starting_depth = input("Please enter the depth at which you want the IDA* search algorithm to start: ")
 def main():
     # print "main"
     # priority_queue tuple has the following structure: heuristic, depth (or the cost), puzzle state
     # priority_queue = Q.PriorityQueue()
     # priority_queue.put((5,0,puzzle))
     solved = False
+    starting_depth = input("Please enter the depth at which you want the IDA* search algorithm to start: ")
     depth = starting_depth - 1
     move_count = 0
     while not solved:
@@ -288,7 +287,7 @@ def main():
             current_node = heapq.heappop(priority_queue)
             # current_node = priority_queue.get()
             # pdb.set_trace()
-            # np.savetxt("puzzle.csv", current_node[4], delimiter=",")
+            np.savetxt("puzzle.csv", current_node[4], delimiter=",")
             h = compute_heuristic(current_node[4], solved_puzzle)
 
             # if is_solved(current_node[4], solved_puzzle):
@@ -303,29 +302,18 @@ def main():
 
             if move_count % 100 == 0:
                 print move_count
+    pdb.set_trace()
     print current_node[4]
-    return current_node
+    return move_count
 
-
-solved_puzzles = []
-file_count = 0
 for i in range(5000):
 
-    solved_puzzles.append(main())
-
-    if i % 1 == 0:
+    if i % 100 == 0:
         # save file
-        for i in range(1):
-            filename = "ground_truth/string_of_puzzle_states_" + str(file_count) + ".csv"
-            string_of_puzzle_states = np.array(solved_puzzles[i][5])
-            np.savetxt(filename, string_of_puzzle_states, delimiter=",")
-            filename = "ground_truth/list_of_moves_" + str(file_count) + ".csv"
-            list_of_moves = np.array(solved_puzzles[i][3])
-            np.savetxt(filename, list_of_moves, delimiter=",")
-            file_count = file_count + 1
+        filename = "ground_truth.csv"
+        export_array = np.array(ground_truth)
+        np.savetxt(filename, export_array, delimiter=",")
 
-        solved_puzzles = []
-
-# move_count = main()
+move_count = main()
 pdb.set_trace()
 print
