@@ -306,13 +306,13 @@ def main():
     print current_node[4]
     return move_count
 
-for i in range(5000):
-
-    if i % 100 == 0:
-        # save file
-        filename = "ground_truth.csv"
-        export_array = np.array(ground_truth)
-        np.savetxt(filename, export_array, delimiter=",")
+# for i in range(5000):
+#
+#     if i % 100 == 0:
+#         # save file
+#         filename = "ground_truth.csv"
+#         export_array = np.array(ground_truth)
+#         np.savetxt(filename, export_array, delimiter=",")
 
 move_count = main()
 pdb.set_trace()

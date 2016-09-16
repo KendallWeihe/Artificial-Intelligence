@@ -20,7 +20,7 @@ from itertools import count
     # IDA* funcs (already implemented)
 
 # ----------------------------------------------------------------------------------------------
-print sys.argv
+# print sys.argv
 
 def read_data(files):
     top = np.genfromtxt(files['top'], delimiter=",")
@@ -54,7 +54,7 @@ def construct_puzzle(top, top_location, bottom, bottom_location, steps):
             upper_index = 6 - (0 - upper_index)
         elif upper_index > 5:
             upper_index = upper_index - 6 ##WARNING!!!!!
-        tubes.append(np.append(np.flipud(bottom[i,:]), top[upper_index,:]))
+        tubes.append(np.append(np.flipud(bottom[int(i),:]), top[int(upper_index),:]))
 
     puzzle = np.array(tubes)
     # print "after constructing..."
@@ -63,7 +63,7 @@ def construct_puzzle(top, top_location, bottom, bottom_location, steps):
     return puzzle
 
 puzzle = construct_puzzle(top, top_location, bottom, bottom_location, steps)
-
+# pdb.set_trace()
 # -----------------------------------------------------------------------------------------------
 
 def flip(puzzle):
@@ -156,7 +156,7 @@ def verify_solvability(puzzle, steps):
 
 # user_input = raw_input("Would you like to verify the puzzle is solvable? (Y/N) ")
 user_input = "n"
-print "\n\n"
+# print "\n\n"
 
 steps_in_int_form = []
 for i in range(steps.shape[0]-1):
@@ -175,16 +175,20 @@ if user_input == "Y" or user_input == "y":
     print puzzle
     print "\n\n"
 
-    print "Here's after solving the puzzle using the steps given by Anton's randomizer..."
+    print "Here's after solving the puzzle using the steps using from Anton's randomizer..."
     print solved_puzzle
     print "\n\n"
 
-#TODO 
+#TODO
     # convert mixed numbers into reds = 1, greens = 2...
     #     store temp solved states tubes
     #     update solved puzzle
     #     iterate through both puzzles (i,j)
     #         find each tubes (^^) values inside unsolved puzzle, and change element value
+
+
+# pdb.set_trace()
+
 
 # --------------------------------------------------------------------------------------------------
 
@@ -300,6 +304,7 @@ def main():
             # current_node = priority_queue.get()
             # pdb.set_trace()
             # np.savetxt("puzzle.csv", current_node[4], delimiter=",")
+            # pdb.set_trace()
             h = compute_heuristic(current_node[4], solved_puzzle)
 
             # if is_solved(current_node[4], solved_puzzle):
@@ -312,10 +317,118 @@ def main():
             move_count = move_count+1
             # pdb.set_trace()
 
-            if move_count % 100 == 0:
-                print move_count
-    print current_node[4]
-    print current_node[1]
+            # if move_count % 100 == 0:
+            #     print move_count
+    # print current_node[4]
+    # print current_node[1]
+    # pdb.set_trace()
+    # solved_original = solved_puzzle.copy()
+    # solved_puzzle[0,:] = np.array([1,1,1,1,1,1,0,0,0,0,0,0])
+    # solved_puzzle[1,:] = np.array([99,2,2,2,2,2,0,0,0,0,0,99])
+    # solved_puzzle[2,:] = np.array([99,99,3,3,3,3,0,0,0,0,99,99])
+    # solved_puzzle[3,:] = np.array([99,99,99,4,4,4,0,0,0,99,99,99])
+    # solved_puzzle[4,:] = np.array([99,99,99,99,5,5,0,0,99,99,99,99])
+    # solved_puzzle[5,:] = np.array([99,99,99,99,99,6,0,99,99,99,99,99])
+    # # pdb.set_trace()
+    # temp = current_node[5].copy()
+    # try:
+    #     temp = temp.reshape(6,6,12)
+    #     for m in range(6):
+    #         unsolved_puzzle = temp[m,:,:].copy()
+    #         # pdb.set_trace()
+    #         for i in range(6):
+    #             for j in range(12):
+    #                 for k in range(6):
+    #                     for l in range(12):
+    #                         if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                             # pdb.set_trace()
+    #                             temp[m,i,j] = solved_puzzle[k,l]
+    #     temp = temp.reshape(36,12)
+    #
+    # except:
+    #     try:
+    #         temp = temp.reshape(5,6,12)
+    #         for m in range(5):
+    #             unsolved_puzzle = temp[m,:,:].copy()
+    #             # pdb.set_trace()
+    #             for i in range(6):
+    #                 for j in range(12):
+    #                     for k in range(6):
+    #                         for l in range(12):
+    #                             if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                                 # pdb.set_trace()
+    #                                 temp[m,i,j] = solved_puzzle[k,l]
+    #         temp = temp.reshape(30,12)
+    #
+    #     except:
+    #         try:
+    #             temp = temp.reshape(4,6,12)
+    #             for m in range(4):
+    #                 unsolved_puzzle = temp[m,:,:].copy()
+    #                 # pdb.set_trace()
+    #                 for i in range(6):
+    #                     for j in range(12):
+    #                         for k in range(6):
+    #                             for l in range(12):
+    #                                 if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                                     # pdb.set_trace()
+    #                                     temp[m,i,j] = solved_puzzle[k,l]
+    #             temp = temp.reshape(24,12)
+    #
+    #         except:
+    #             try:
+    #                 temp = temp.reshape(3,6,12)
+    #                 for m in range(3):
+    #                     unsolved_puzzle = temp[m,:,:].copy()
+    #                     # pdb.set_trace()
+    #                     for i in range(6):
+    #                         for j in range(12):
+    #                             for k in range(6):
+    #                                 for l in range(12):
+    #                                     if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                                         # pdb.set_trace()
+    #                                         temp[m,i,j] = solved_puzzle[k,l]
+    #                 temp = temp.reshape(18,12)
+    #
+    #             except:
+    #                 try:
+    #                     temp = temp.reshape(2,6,12)
+    #                     for m in range(2):
+    #                         unsolved_puzzle = temp[m,:,:].copy()
+    #                         # pdb.set_trace()
+    #                         for i in range(6):
+    #                             for j in range(12):
+    #                                 for k in range(6):
+    #                                     for l in range(12):
+    #                                         if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                                             # pdb.set_trace()
+    #                                             temp[m,i,j] = solved_puzzle[k,l]
+    #
+    #                     temp = temp.reshape(12,12)
+    #                 except:
+    #                     try:
+    #                         temp = temp.reshape(1,6,12)
+    #                         for m in range(1):
+    #                             unsolved_puzzle = temp[m,:,:].copy()
+    #                             # pdb.set_trace()
+    #                             for i in range(6):
+    #                                 for j in range(12):
+    #                                     for k in range(6):
+    #                                         for l in range(12):
+    #                                             if unsolved_puzzle[i,j] == solved_original[k,l]:
+    #                                                 # pdb.set_trace()
+    #                                                 temp[m,i,j] = solved_puzzle[k,l]
+    #                         temp = temp.reshape(6,12)
+    #
+    #                     except:
+    #                         pdb.set_trace()
+    #                         print "error"
+
+    # pdb.set_trace()
+
+    # current_node[5] = temp
+    print len(priority_queue)
+    # pdb.set_trace()
     return current_node
 
 solved_puzzles = []
@@ -325,18 +438,19 @@ for i in range(1):
 
     solved_puzzles.append(main())
 
-    if i % 1 == 0:
-        # save file
-        for i in range(1):
-            filename = "ground_truth/string_of_puzzle_states_" + sys.argv[6] + ".csv"
-            string_of_puzzle_states = np.array(solved_puzzles[i][5])
-            np.savetxt(filename, string_of_puzzle_states, delimiter=",")
-            filename = "ground_truth/list_of_moves_" + str(sys.argv[6]) + ".csv"
-            list_of_moves = np.array(solved_puzzles[i][3])
-            np.savetxt(filename, list_of_moves, delimiter=",")
-            file_count = file_count + 1
-
-        solved_puzzles = []
+    # if i % 1 == 0:
+    #     # save file
+    #     filename = ""
+    #     for i in range(1):
+    #         # filename = "ground_truth/string_of_puzzle_states_" + sys.argv[6] + ".csv"
+    #         # string_of_puzzle_states = np.array(solved_puzzles[i][5])
+    #         # np.savetxt(filename, string_of_puzzle_states, delimiter=",")
+    #         # filename = "ground_truth/list_of_moves_" + str(sys.argv[6]) + ".csv"
+    #         # list_of_moves = np.array(solved_puzzles[i][3])
+    #         # np.savetxt(filename, list_of_moves, delimiter=",")
+    #         # file_count = file_count + 1
+    #
+    #     solved_puzzles = []
 
 # move_count = main()
 # pdb.set_trace()
