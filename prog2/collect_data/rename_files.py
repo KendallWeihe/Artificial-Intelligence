@@ -4,16 +4,17 @@ import subprocess
 
 
 path =  os.getcwd()
-filenames = os.listdir("temp_mixed_puzzles/")
+filenames = os.listdir("mixed_puzzles/")
 
 for i in range(len(filenames)):
-    filenames[i] = "temp_mixed_puzzles/" + filenames[i]
+    filenames[i] = "mixed_puzzles/" + filenames[i]
 
 print filenames
 
 try:
     for filename in filenames:
-        os.rename(filename, filename.replace(" ", "-"))
+        new_filename = filename
+        os.rename(filename, filename.replace(" (" + str(i) + ")", "-" + str(i))
 except:
     pdb.set_trace()
     
