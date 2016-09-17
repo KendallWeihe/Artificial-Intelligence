@@ -14,16 +14,16 @@ Project: https://github.com/aymericdamien/TensorFlow-Examples/
 learning_rate = 0.001
 training_epochs = 4100
 batch_size = 7
-display_step = 500
+display_step = 50
 
 # Network Parameters
 n_hidden_1 = 256 # 1st layer number of features
 n_hidden_2 = 256 # 2nd layer number of features
 n_input = 6 * 12 # MNIST data input (img shape: 28*28)
-n_classes = 5 # MNIST total classes (0-9 digits)
+n_classes = 7 # MNIST total classes (0-9 digits)
 
 # tf Graph input
-x = tf.placeholder("float", [None, 72])
+x = tf.placeholder("float", [None, n_input])
 y = tf.placeholder("float", [None, n_classes])
 
 # Create model
@@ -63,28 +63,25 @@ init = tf.initialize_all_variables()
 def input_data():
     puzzle_states = []
     classes = []
-    for i in range(101,150):
+    for i in range(1536):
         filename = "collect_data/ground_truth/string_of_puzzle_states_" + str(i) + ".csv"
         puzzle_state = np.genfromtxt(filename, delimiter=",")
-        puzzle_states.append(puzzle_state.reshape((puzzle_state.shape[0]/6,6,12)))
+        if puzzle_state.shape[0] == 48:
+            puzzle_states.append(puzzle_state.reshape((8,6,12)))
 
-        filename = "collect_data/ground_truth/list_of_moves_" + str(i) + ".csv"
-        puzzle_class = np.genfromtxt(filename, delimiter=",")
-        classes.append(puzzle_class)
+            filename = "collect_data/ground_truth/list_of_moves_" + str(i) + ".csv"
+            puzzle_class = np.genfromtxt(filename, delimiter=",")
+            classes.append(puzzle_class)
 
     return np.array(puzzle_states), np.array(classes)
 
 def get_batch(puzzle_states, classes, index):
-    if index > puzzle_states.shape[0] - 5:
+    if index > puzzle_states.shape[0] - batch_size:
         index = 0
 
-    k = puzzle_states[index][:,0,0].shape[0]
-    if k < 5:
-        pdb.set_trace()
-
-    puzzle_batch = puzzle_states[index][1:k,:,:]
-    puzzle_batch = puzzle_batch.reshape((k-1,6*12))
-    classes =  np.rot90(np.identity(5))
+    puzzle_batch = puzzle_states[index,1:8,:,:]
+    puzzle_batch = puzzle_batch.reshape((7,6*12))
+    classes =  np.rot90(np.identity(7))
 
     return puzzle_batch, classes
 
@@ -102,8 +99,7 @@ with tf.Session() as sess:
         # Loop over all batches
         for i in range(batch_size):
             # pdb.set_trace()
-            for i in range(1000):
-                batch_x, batch_y = get_batch(puzzle_states, classes, index)
+            batch_x, batch_y = get_batch(puzzle_states, classes, index)
             index = index + 1
             # Run optimization op (backprop) and cost op (to get loss value)
             _, c = sess.run([optimizer, cost], feed_dict={x: batch_x,

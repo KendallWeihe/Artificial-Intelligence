@@ -427,7 +427,7 @@ def main():
     # pdb.set_trace()
 
     # current_node[5] = temp
-    print len(priority_queue)
+    print str(len(priority_queue)) + "," + str(current_node[1]) 
     # pdb.set_trace()
     return current_node
 
