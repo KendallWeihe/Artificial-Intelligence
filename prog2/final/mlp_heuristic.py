@@ -64,12 +64,12 @@ def input_data():
     puzzle_states = []
     classes = []
     for i in range(1536):
-        filename = "collect_data/ground_truth/string_of_puzzle_states_" + str(i) + ".csv"
+        filename = "ground_truth/string_of_puzzle_states_" + str(i) + ".csv"
         puzzle_state = np.genfromtxt(filename, delimiter=",")
         if puzzle_state.shape[0] == 48:
             puzzle_states.append(puzzle_state.reshape((8,6,12)))
 
-            filename = "collect_data/ground_truth/list_of_moves_" + str(i) + ".csv"
+            filename = "ground_truth/list_of_moves_" + str(i) + ".csv"
             puzzle_class = np.genfromtxt(filename, delimiter=",")
             classes.append(puzzle_class)
 
