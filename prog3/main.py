@@ -19,14 +19,14 @@ sys.setrecursionlimit(100000) # 10000 is an example, try with different values
 
 def consistent_set_of_literals(phi):
     explored_literals = []
+    # pdb.set_trace()
     for i in range(phi[:,0].shape[0]):
         for j in range(phi[0,:].shape[0]):
             if phi[i,j] not in explored_literals:
                 explored_literals.append(phi[i,j])
-                if -explored_literals[len(explored_literals)-1] in phi:
+                if explored_literals[len(explored_literals)-1] != 0 and -explored_literals[len(explored_literals)-1] in phi:
                     return False
     return True
-
 
 def contains_empty_clause(phi):
     for i in range(phi[:,0].shape[0]):
@@ -62,35 +62,55 @@ def find_pure_literals(phi):
 
 explored_vars = []
 def dpll(phi):
+    # if phi.shape[0] == 1:
+    #     pdb.set_trace()
+    #     return
+
     if consistent_set_of_literals(phi):
+        # pdb.set_trace()
         return True
     if contains_empty_clause(phi):
+        # pdb.set_trace()
         return False
     unit_clauses = find_unit_clauses(phi)
     for unit_clause in unit_clauses:
         # set unit_clause to true
         delete_these_indices = np.where(phi==unit_clause)[0]
         phi = np.delete(phi, (delete_these_indices), 0)
+        if phi.shape[0] == 0:
+            # pdb.set_trace()
+            phi = np.array([[0,0,0,0]])
 
     pure_literals = find_pure_literals(phi)
     for pure_literal in pure_literals:
         # np.place(phi, phi==pure_literal, 1)
         delete_these_indices = np.where(phi==pure_literal)[0]
         phi = np.delete(phi, (delete_these_indices), 0)
+        if phi.shape[0] == 0:
+            # pdb.set_trace()
+            phi = np.array([[0,0,0,0]])
 
-    if phi.shape[0] == 0:
+
+    if contains_empty_clause(phi):
+        # pdb.set_trace()
         return False
+
+    # if phi.shape[0] == 0:
+    #     pdb.set_trace()
+    #     return False
 
     first_literal = None
     for i in range(phi[:,0].shape[0]):
         temp_clause = phi[i,:].copy()
         temp_clause = temp_clause[temp_clause != 0]
-        for j in range(temp_clause.shape[0]):
-            if temp_clause[j] not in explored_vars:
-                first_literal = temp_clause[j]
+        # for j in range(temp_clause.shape[0]):
+            # if temp_clause[j] not in explored_vars:
+                # first_literal = temp_clause[j]
+        first_literal = temp_clause[0]
 
-    if first_literal == None:
-        return False
+    # if first_literal == None:
+    #     pdb.set_trace()
+    #     return False
 
     additional_tuple = np.zeros((phi[0,:].shape[0]))
     additional_tuple[0] = first_literal
@@ -123,6 +143,7 @@ def main():
 
                 for j in range(num_trials):
                     print "Trial #" + str(j)
+                    # pdb.set_trace()
                     if i == 0:
                         if filename == "3.cnf":
                             pdb.set_trace()
