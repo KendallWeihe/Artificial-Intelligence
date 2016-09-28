@@ -35,6 +35,7 @@ def main():
         for filename in filenames:
             print "Formula -- " + filename + "--------------------"
             file_path = difficulty + filename
+            file_path = "easy/12.cnf"
             for i in range(num_algs):
                 if i == 0:
                     print "     Running the DPLL algorithm..."
@@ -46,13 +47,27 @@ def main():
                 for j in range(num_trials):
                     # print "         Trial #" + str(j)
                     if i == 0:
-                        pdb.set_trace()
+                        # pdb.set_trace()
                         start = time.time()
                         subprocess.call(["python", "dpll.py", file_path])
-                        print("{:.3f} seconds".format(time.time() - start))
-                        pdb.set_trace()
+                        print("             {:.3f} seconds".format(time.time() - start))
+                        # pdb.set_trace()
                     elif i == 1:
+                        start = time.time()
+
                         SetTimeout(["python", "hill_climbing.py", file_path], 5).Run()
+                        print("             {:.3f} seconds".format(time.time() - start))
+                        timing_output = np.genfromtxt("hill_climbing_timing.csv", delimiter="\n")
+                        timing_output = np.append(timing_output, time.time() - start)
+                        np.savetxt("hill_climbing_timing.csv", timing_output, delimiter="\n")
+                    elif i == 2:
+                        start = time.time()
+                        SetTimeout(["python", "walksat.py", file_path], 5).Run()
+                        print("             {:.3f} seconds".format(time.time() - start))
+                        timing_output = np.genfromtxt("walksat_timing.csv", delimiter="\n")
+                        timing_output = np.append(timing_output, time.time() - start)
+                        np.savetxt("walksat_timing.csv", timing_output, delimiter="\n")
+
 
                     # elif i == 1:
                     #     satisfiable, c = local_search(formula)

@@ -56,7 +56,6 @@ def find_pure_literals(phi):
                     pure_literals.append(phi[i,j])
     return np.array(pure_literals)
 
-explored_vars = []
 def dpll(phi):
     if consistent_set_of_literals(phi):
         return True
@@ -67,15 +66,15 @@ def dpll(phi):
         delete_these_indices = np.where(phi==unit_clause)[0]
         phi = np.delete(phi, (delete_these_indices), 0)
         np.place(phi,phi == -unit_clause, 0)
-        if phi.shape[0] == 0:
-            phi = np.array([[0,0,0,0]])
+        # if phi.shape[0] == 0:
+        #     phi = np.array([[0,0,0,0]])
 
     pure_literals = find_pure_literals(phi)
     for pure_literal in pure_literals:
         delete_these_indices = np.where(phi==pure_literal)[0]
         phi = np.delete(phi, (delete_these_indices), 0)
-        if phi.shape[0] == 0:
-            phi = np.array([[0,0,0,0]])
+        # if phi.shape[0] == 0:
+        #     phi = np.array([[0,0,0,0]])
 
 
     first_literal = None
@@ -91,21 +90,18 @@ def dpll(phi):
         if found == True:
             break
 
-    if first_literal == None:
-        first_literal = 0
-
+    # pdb.set_trace()
     additional_tuple = np.zeros((phi[0,:].shape[0]))
     additional_tuple[0] = first_literal
     phi_and_first_literal = np.vstack((phi, additional_tuple))
     phi_and_first_literal_not = np.vstack((phi, -additional_tuple))
-    explored_vars.append(first_literal)
-    explored_vars.append(-first_literal)
 
     return dpll(phi_and_first_literal) or dpll(phi_and_first_literal_not)
 
 # -------------------------------------------------------------------------------
 
 formula = np.genfromtxt(sys.argv[1])
+formula = np.genfromtxt("easy/12.cnf")
 formula = formula[1:formula[:,0].shape[0],:].copy()
 satisfiability = dpll(formula)
 if satisfiability:

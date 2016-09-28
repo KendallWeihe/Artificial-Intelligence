@@ -149,5 +149,3 @@ satisfiable = random_restart_hill_climbing(formula, num_variables)
 # pdb.set_trace()
 if satisfiable:
     print "             This formula was satisfied"
-else:
-    print "             Hill climbing did not find a satisfiable solution"
