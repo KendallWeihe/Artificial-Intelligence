@@ -118,6 +118,7 @@ def is_satisfied(formula, current_state):
             # pdb.set_trace()
             return False
 
+    # pdb.set_trace()
     return True
 
 def random_restart_hill_climbing(formula, num_variables):
@@ -125,14 +126,14 @@ def random_restart_hill_climbing(formula, num_variables):
     while 1:
         random_start_state = np.random.randint(2, size=int(num_variables))
         current_state = hill_climbing(formula, random_start_state)
-        pdb.set_trace()
-        import itertools
-        lst = list(itertools.product([0, 1], repeat=int(num_variables)))
-        for i in range(len(lst)):
-            temp_arr = np.array(lst[i])
-            satisfied = is_satisfied(formula, temp_arr)
-            print satisfied
-        pdb.set_trace()
+        # pdb.set_trace()
+        # import itertools
+        # lst = list(itertools.product([0, 1], repeat=int(num_variables)))
+        # for i in range(len(lst)):
+        #     temp_arr = np.array(lst[i])
+        #     satisfied = is_satisfied(formula, temp_arr)
+        #     print satisfied
+        # pdb.set_trace()
 
         if is_satisfied(formula, current_state):
             return True
@@ -144,6 +145,9 @@ def random_restart_hill_climbing(formula, num_variables):
 formula = np.genfromtxt(sys.argv[1])
 num_variables = formula[0,2]
 formula = formula[1:formula[:,0].shape[0],:].copy()
-random_restart_hill_climbing(formula, num_variables)
+satisfiable = random_restart_hill_climbing(formula, num_variables)
 # pdb.set_trace()
-print "This formula was satisfied"
+if satisfiable:
+    print "             This formula was satisfied"
+else:
+    print "             Hill climbing did not find a satisfiable solution"

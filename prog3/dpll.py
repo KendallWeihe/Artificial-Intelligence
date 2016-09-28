@@ -108,4 +108,7 @@ def dpll(phi):
 formula = np.genfromtxt(sys.argv[1])
 formula = formula[1:formula[:,0].shape[0],:].copy()
 satisfiability = dpll(formula)
-print satisfiability
+if satisfiability:
+    print "             This formula was satisfied"
+else:
+    print "             DPLL did not find a satisfiable solution"
