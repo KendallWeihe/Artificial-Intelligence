@@ -11,20 +11,14 @@ import subprocess
 def consistent_set_of_literals(phi):
     explored_literals = []
     # pdb.set_trace()
-    all_empty = True
     for i in range(phi[:,0].shape[0]):
         for j in range(phi[0,:].shape[0]):
             if phi[i,j] not in explored_literals:
                 explored_literals.append(phi[i,j])
-                if explored_literals[len(explored_literals)-1] != 0:
-                    all_empty = False
-                    if -explored_literals[len(explored_literals)-1] in phi:
-                        return False
+                if -explored_literals[len(explored_literals)-1] in phi:
+                    return False
 
-    if all_empty:
-        return False
-    else:
-        return True
+    return True
 
 def contains_empty_clause(phi):
     for i in range(phi[:,0].shape[0]):
@@ -61,6 +55,7 @@ def dpll(phi):
         return True
     if contains_empty_clause(phi):
         return False
+
     unit_clauses = find_unit_clauses(phi)
     for unit_clause in unit_clauses:
         delete_these_indices = np.where(phi==unit_clause)[0]
