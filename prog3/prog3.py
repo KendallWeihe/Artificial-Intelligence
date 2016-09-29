@@ -6,208 +6,86 @@ import time
 import subprocess
 import threading
 import itertools
+import random
+import re
 
-# #TODO:
-#     choose random 20% of pop to do crossover
-#         crossover produces 1 child
-#     generate mutation probability
-#         if > 0.5 then pick one bit to mutate
-#
-#
-#
-# def genetic_alg(formula, num_variables):
-#     # generate a population size that is of size 256
-#     current_generation = []
-#     for i in range(256):
-#         current_generation.append(np.random.choice(2,num_variables))
-#
-#     num_epochs = 1000
-#     for i in range(num_epochs):
 
-# DPLL --------------------------------------------------------------------------
-#
-# def consistent_set_of_literals(phi):
-#     explored_literals = []
-#     # pdb.set_trace()
-#     for i in range(phi[:,0].shape[0]):
-#         for j in range(phi[0,:].shape[0]):
-#             if phi[i,j] not in explored_literals:
-#                 explored_literals.append(phi[i,j])
-#                 if -explored_literals[len(explored_literals)-1] in phi:
-#                     return False
-#
-#     return True
-#
-# def contains_empty_clause(phi):
-#     for i in range(phi[:,0].shape[0]):
-#         temp_clause = phi[i,:].copy()
-#         truncated_clause = temp_clause[temp_clause != 0]
-#         if truncated_clause.shape[0] == 0:
-#             return True
-#
-#     return False
-#
-# def find_unit_clauses(phi):
-#     unit_clauses = []
-#     for i in range(phi[:,0].shape[0]):
-#         temp_clause = phi[i,:].copy()
-#         truncated_clause = temp_clause[temp_clause != 0]
-#         if truncated_clause.shape[0] == 1:
-#             unit_clauses.append(truncated_clause[0])
-#
-#     return unit_clauses
-#
-# def find_pure_literals(phi):
-#     explored_literals = []
-#     pure_literals = []
-#     for i in range(phi[:,0].shape[0]):
-#         for j in range(phi[0,:].shape[0]):
-#             if phi[i,j] not in explored_literals:
-#                 explored_literals.append(phi[i,j])
-#                 if explored_literals[len(explored_literals)-1] != 0 and -explored_literals[len(explored_literals)-1] not in phi:
-#                     pure_literals.append(phi[i,j])
-#     return np.array(pure_literals)
-#
-# def dpll(phi):
-#
-#     if consistent_set_of_literals(phi):
-#         return True
-#     if contains_empty_clause(phi):
-#         return False
-#
-#     pure_literals = find_pure_literals(phi)
-#     for pure_literal in pure_literals:
-#         delete_these_indices = np.where(phi==pure_literal)[0]
-#         phi = np.delete(phi, (delete_these_indices), 0)
-#         if phi.shape[0] == 0:
-#             phi = np.array([[0,0,0,0]])
-#
-#     unit_clauses = find_unit_clauses(phi)
-#     for unit_clause in unit_clauses:
-#         delete_these_indices = np.where(phi==unit_clause)[0]
-#         phi = np.delete(phi, (delete_these_indices), 0)
-#         np.place(phi,phi == -unit_clause, 0)
-#         if phi.shape[0] == 0:
-#             phi = np.array([[0,0,0,0]])
-#
-#
-#     first_literal = None
-#     for i in range(phi[:,0].shape[0]):
-#         temp_clause = phi[i,:].copy()
-#         temp_clause = temp_clause[temp_clause != 0]
-#         if temp_clause.shape[0] != 0:
-#             first_literal = temp_clause[0]
-#             break
-#
-#     if first_literal == None:
-#         first_literal = 0
-#
-#     # pdb.set_trace()
-#     additional_tuple = np.zeros((phi[0,:].shape[0]))
-#     additional_tuple[0] = first_literal
-#     phi_and_first_literal = np.vstack((phi, additional_tuple))
-#     phi_and_first_literal_not = np.vstack((phi, -additional_tuple))
-#
-#     return dpll(phi_and_first_literal) or dpll(phi_and_first_literal_not)
-#
-# # -------------------------------------------------------------------------------
+# GENETIC ALG -----------------------------------------------------------------------------------------
 
-# DPLL --------------------------------------------------------------------------
+def crossover(formula, current_generation, crossover_with_these_individuals, num_variables):
 
-def consistent_set_of_literals(phi):
-    explored_literals = []
-    # pdb.set_trace()
-    all_empty = True
-    for i in range(phi[:,0].shape[0]):
-        for j in range(phi[0,:].shape[0]):
-            if phi[i,j] not in explored_literals:
-                explored_literals.append(phi[i,j])
-                if explored_literals[len(explored_literals)-1] != 0:
-                    all_empty = False
-                    if -explored_literals[len(explored_literals)-1] in phi:
-                        return False
+    children = []
+    for i in range(0, len(crossover_with_these_individuals), 2):
+        parent_1 = current_generation[crossover_with_these_individuals[i], 0:int(num_variables/2)].copy()
+        parent_2 = current_generation[crossover_with_these_individuals[i+1], int(num_variables/2):int(num_variables)].copy()
+        child = np.append(parent_1, parent_2)
+        children.append(child)
 
-    if all_empty:
-        return False
-    else:
-        return True
+    return np.array(children)
 
-def contains_empty_clause(phi):
-    for i in range(phi[:,0].shape[0]):
-        temp_clause = phi[i,:].copy()
-        truncated_clause = temp_clause[temp_clause != 0]
-        if truncated_clause.shape[0] == 0:
-            return True
+def compute_genetic_fitness(formula, population):
 
-    return False
+    fitnesses = []
+    for i in range(population[:,0].shape[0]):
+        individual_fitness = 0
+        for j in range(formula[:,0].shape[0]):
+            clause_satisfied = False
+            for k in range(formula[0,:].shape[0]):
+                if formula[j,k] > 0:
+                    if population[i,int(formula[j,k]-1)] == 1:
+                        clause_satisfied = True
+                elif formula[j,k] < 0:
+                    if population[i,int(-1 * formula[j,k])-1] == 0:
+                        clause_satisfied = True
+            if clause_satisfied == True:
+                individual_fitness = individual_fitness + 1
 
-def find_unit_clauses(phi):
-    unit_clauses = []
-    for i in range(phi[:,0].shape[0]):
-        temp_clause = phi[i,:].copy()
-        truncated_clause = temp_clause[temp_clause != 0]
-        if truncated_clause.shape[0] == 1:
-            unit_clauses.append(truncated_clause[0])
+        fitnesses.append(individual_fitness)
 
-    return unit_clauses
+    return np.array(fitnesses)
 
-def find_pure_literals(phi):
-    explored_literals = []
-    pure_literals = []
-    for i in range(phi[:,0].shape[0]):
-        for j in range(phi[0,:].shape[0]):
-            if phi[i,j] not in explored_literals:
-                explored_literals.append(phi[i,j])
-                if explored_literals[len(explored_literals)-1] != 0 and -explored_literals[len(explored_literals)-1] not in phi:
-                    pure_literals.append(phi[i,j])
-    return np.array(pure_literals)
 
-explored_vars = []
-def dpll(phi):
-    if consistent_set_of_literals(phi):
-        return True
-    if contains_empty_clause(phi):
-        return False
+def genetic_alg(formula, num_variables):
 
-    pure_literals = find_pure_literals(phi)
-    for pure_literal in pure_literals:
-        delete_these_indices = np.where(phi==pure_literal)[0]
-        phi = np.delete(phi, (delete_these_indices), 0)
-        if phi.shape[0] == 0:
-            phi = np.array([[0,0,0,0]])
+    starting_generation = []
+    POPULATION_SIZE = 256
+    for i in range(POPULATION_SIZE):
+        starting_generation.append(np.random.choice(2, int(num_variables)))
 
-    unit_clauses = find_unit_clauses(phi)
-    for unit_clause in unit_clauses:
-        delete_these_indices = np.where(phi==unit_clause)[0]
-        phi = np.delete(phi, (delete_these_indices), 0)
-        np.place(phi,phi == -unit_clause, 0)
-        if phi.shape[0] == 0:
-            phi = np.array([[0,0,0,0]])
+    current_generation = np.array(starting_generation)
 
-    first_literal = None
-    found = False
-    for i in range(phi[:,0].shape[0]):
-        temp_clause = phi[i,:].copy()
-        temp_clause = temp_clause[temp_clause != 0]
-        for j in range(temp_clause.shape[0]):
-            if temp_clause[j] != 0:
-                first_literal = temp_clause[j]
-                found = True
-                break
-        if found == True:
-            break
+    num_epochs = 0
+    start = time.time()
+    max_fitness = 0
+    while time.time() - start < 5:
+        crossover_with_these_individuals = random.sample(range(256), 50) # 51 is roughly 20% of 256
+        children = crossover(formula, current_generation, np.array(crossover_with_these_individuals), num_variables)
+        for i in range(children[:,0].shape[0]):
+            p = float(np.random.randint(100)) / 100.0
+            if p > 0.5:
+                mutate_this_random_bit = np.random.randint(num_variables)
+                children[i,int(mutate_this_random_bit)] = int(not(children[i,int(mutate_this_random_bit)]))
 
-    if first_literal == None:
-        first_literal = 0
+        population = np.concatenate((current_generation, children), axis=0)
 
-    additional_tuple = np.zeros((phi[0,:].shape[0]))
-    additional_tuple[0] = first_literal
-    phi_and_first_literal = np.vstack((phi, additional_tuple))
-    phi_and_first_literal_not = np.vstack((phi, -additional_tuple))
-    explored_vars.append(first_literal)
-    explored_vars.append(-first_literal)
+        fitness = compute_genetic_fitness(formula, population)
+        if np.amax(fitness) > max_fitness:
+            max_fitness = np.amax(fitness)
 
-    return dpll(phi_and_first_literal) or dpll(phi_and_first_literal_not)
+        if formula[:,0].shape[0] in fitness:
+            return True, None
+
+        KILL_THIS_MANY_INDIVIDUALS = 25
+        for i in range(KILL_THIS_MANY_INDIVIDUALS):
+            lowest_fitness_individual = np.argmin(fitness)
+            population = np.delete(population, lowest_fitness_individual, axis=0)
+            fitness = np.delete(fitness, lowest_fitness_individual, axis=0)
+
+        current_generation = population
+        num_epochs = num_epochs + 1
+        # print "Epoch #" + str(num_epochs) # uncomment to print the number of epochs
+
+    return False, max_fitness
 
 # -------------------------------------------------------------------------------
 
@@ -307,17 +185,38 @@ def is_satisfied(formula, current_state):
     # pdb.set_trace()
     return True
 
+def compute_fitness(formula, current_state):
+
+    for i in range(formula[:,0].shape[0]):
+        clause_satisfied = False
+        for j in range(formula[0,:].shape[0]):
+            if formula[i,j] > 0:
+                if population[i,int(formula[i,j]-1)] == 1:
+                    clause_satisfied = True
+            elif formula[i,j] < 0:
+                if population[i,int(-1 * formula[i,j])-1] == 0:
+                    clause_satisfied = True
+        if clause_satisfied == True:
+            individual_fitness = individual_fitness + 1
+
+    return individual_fitness
+
 def random_restart_hill_climbing(formula, num_variables):
 
     start = time.time()
+    max_fitness = 0
     while 1:
         random_start_state = np.random.randint(2, size=int(num_variables))
         current_state = hill_climbing(formula, random_start_state)
+        fitness = compute_fitness(formula, current_state)
+        if fitness > max_fitness:
+            max_fitness = fitness
+
         if is_satisfied(formula, current_state):
-            return True
+            return True, formula[:,0].shape[0]
 
         if time.time() - start > 5:
-            return False
+            return False, max_fitness
 
 
 # -------------------------------------------------------------------------------
@@ -404,12 +303,12 @@ def is_satisfied(formula, current_state):
 def walksat(formula, num_variables):
 
     start = time.time()
+    max_fitness = 0
     current_state = np.random.randint(2, size=int(num_variables))
     while 1:
 
         if is_satisfied(formula, current_state):
-            pdb.set_trace()
-            return True
+            return True, formula[:,0].shape[0]
 
         prob = float(np.random.randint(100)) / 100.0
 
@@ -420,57 +319,100 @@ def walksat(formula, num_variables):
             # pdb.set_trace()
             current_state = find_min_bit(formula, current_state)
 
+        fitness = compute_fitness(formula, current_state)
+        if fitness > max_fitness:
+            max_fitness = fitness
+
         if time.time() - start > 5:
-            return False
+            return False, max_fitness
 
 
 # -------------------------------------------------------------------------------
-
 
 def main():
     num_algs = 3
     num_trials = 10
     difficulties = ["easy/", "hard/"]
     for difficulty in difficulties:
-        filenames = os.listdir(difficulty)
-        filenames.sort()
+
+        # I chose to generate filenames since they are from 1-100
+        # python isn't good at sorting numeric strings
+        # if you want to test out entire directories, uncomment and comment the below lines
+
+        # filenames = os.listdir(difficulty) # uncomment
+        # filenames.sort()
+        filenames = []  # comment
+        for i in range(1,101):
+            filenames.append(str(i) + ".cnf")
+
         for filename in filenames:
             file_path = difficulty + filename
-            file_path = "easy/2.cnf"
             formula = np.genfromtxt(file_path)
             print "Formula -- " + file_path + "--------------------"
             for i in range(num_algs):
                 if i == 0:
-                    print "     Running the DPLL algorithm..."
+                    print "     Running a Genetic algorithm..."
                 elif i == 1:
-                    print "     Running the Local Search algorithm..."
+                    print "     Running the Hill Climbing algorithm..."
                 else:
                     print "     Running the WalkSAT algorithm..."
 
                 for j in range(num_trials):
                     if i == 0:
-                        dpll_formula = formula[1:formula[:,0].shape[0],:].copy()
-                        satisfiable = dpll(dpll_formula)
+                        # pdb.set_trace()
+                        num_variables = formula[0,2]
+                        genetic_formula = formula[1:formula[:,0].shape[0],:].copy()
+                        start = time.time()
+                        satisfiable, max_fitness = genetic_alg(genetic_formula, num_variables)
                         if satisfiable:
-                            print "This is satisfiable"
+                            print "                 This is satisfiable"
                         else:
-                            print "This is NOT satisfiable"
+                            print "                 This is NOT satisfiable"
+                            print "                 Max fitness = " + str(max_fitness)
+                        end = time.time() - start
+                        times = np.genfromtxt("gen_alg_times.csv", delimiter="\n")
+                        times = np.append(times, end)
+                        np.savetxt("gen_alg_times.csv", times, delimiter="\n")
+                        c = np.genfromtxt("gen_alg_c.csv", delimiter="\n")
+                        c = np.append(c, max_fitness)
+                        np.savetxt("gen_alg_c.csv", c, delimiter="\n")
+
                     elif i == 1:
                         num_variables = formula[0,2]
                         hill_climbing_formula = formula[1:formula[:,0].shape[0],:].copy()
-                        satisfiable = random_restart_hill_climbing(hill_climbing_formula, num_variables)
+                        start = time.time()
+                        satisfiable, max_fitness = random_restart_hill_climbing(hill_climbing_formula, num_variables)
                         if satisfiable:
-                            print "This is satisfiable"
+                            print "                 This is satisfiable"
                         else:
-                            print "This is NOT satisfiable"
+                            print "                 This is NOT satisfiable"
+                            print "                 Max fitness = " + str(max_fitness)
+                        end = time.time() - start
+                        times = np.genfromtxt("hill_climbing_alg_times.csv", delimiter="\n")
+                        times = np.append(times, end)
+                        np.savetxt("hill_climbing_alg_times.csv", times, delimiter="\n")
+                        c = np.genfromtxt("hill_climbing_alg_c.csv", delimiter="\n")
+                        c = np.append(c, max_fitness)
+                        np.savetxt("hill_climbing_alg_c.csv", c, delimiter="\n")
+
                     elif i == 2:
                         num_variables = formula[0,2]
                         walksat_formula = formula[1:formula[:,0].shape[0],:].copy()
-                        satisfiable = walksat(walksat_formula, num_variables)
+                        start = time.time()
+                        satisfiable, max_fitness = walksat(walksat_formula, num_variables)
                         if satisfiable:
-                            print "This is satisfiable"
+                            print "                 This is satisfiable"
                         else:
-                            print "This is NOT satisfiable"
+                            print "                 This is NOT satisfiable"
+                            print "                 Max fitness = " + str(max_fitness)
+                        end = time.time() - start
+                        times = np.genfromtxt("walksat_alg_times.csv", delimiter="\n")
+                        times = np.append(times, end)
+                        np.savetxt("walksat_alg_times.csv", times, delimiter="\n")
+                        c = np.genfromtxt("walksat_alg_c.csv", delimiter="\n")
+                        c = np.append(c, max_fitness)
+                        np.savetxt("walksat_alg_c.csv", c, delimiter="\n")
+
 
             print "-------------------------------------------------"
 
