@@ -371,11 +371,11 @@ def main():
                             print "                 Max fitness = " + str(max_fitness)
                         end = time.time() - start
                         times = np.genfromtxt("gen_alg_times.csv", delimiter="\n")
-                        times = np.append(times, end)
-                        np.savetxt("gen_alg_times.csv", times, delimiter="\n")
+                        times = np.append(times, str(end))
+                        np.savetxt("gen_alg_times.csv", times, delimiter="\n", fmt="%s")
                         c = np.genfromtxt("gen_alg_c.csv", delimiter="\n")
-                        c = np.append(c, max_fitness)
-                        np.savetxt("gen_alg_c.csv", c, delimiter="\n")
+                        c = np.append(c, str(max_fitness))
+                        np.savetxt("gen_alg_c.csv", c, delimiter="\n", fmt="%s")
 
                     elif i == 1:
                         num_variables = formula[0,2]
@@ -389,11 +389,11 @@ def main():
                             print "                 Max fitness = " + str(max_fitness)
                         end = time.time() - start
                         times = np.genfromtxt("hill_climbing_alg_times.csv", delimiter="\n")
-                        times = np.append(times, end)
-                        np.savetxt("hill_climbing_alg_times.csv", times, delimiter="\n")
+                        times = np.append(times, str(end))
+                        np.savetxt("hill_climbing_alg_times.csv", times, delimiter="\n", fmt="%s")
                         c = np.genfromtxt("hill_climbing_alg_c.csv", delimiter="\n")
-                        c = np.append(c, max_fitness)
-                        np.savetxt("hill_climbing_alg_c.csv", c, delimiter="\n")
+                        c = np.append(c, str(max_fitness))
+                        np.savetxt("hill_climbing_alg_c.csv", c, delimiter="\n", fmt="%s")
 
                     elif i == 2:
                         num_variables = formula[0,2]
@@ -407,11 +407,11 @@ def main():
                             print "                 Max fitness = " + str(max_fitness)
                         end = time.time() - start
                         times = np.genfromtxt("walksat_alg_times.csv", delimiter="\n")
-                        times = np.append(times, end)
-                        np.savetxt("walksat_alg_times.csv", times, delimiter="\n")
+                        times = np.append(times, str(end))
+                        np.savetxt("walksat_alg_times.csv", times, delimiter="\n", fmt="%s")
                         c = np.genfromtxt("walksat_alg_c.csv", delimiter="\n")
-                        c = np.append(c, max_fitness)
-                        np.savetxt("walksat_alg_c.csv", c, delimiter="\n")
+                        c = np.append(c, str(max_fitness))
+                        np.savetxt("walksat_alg_c.csv", c, delimiter="\n", fmt="%s")
 
 
             print "-------------------------------------------------"
