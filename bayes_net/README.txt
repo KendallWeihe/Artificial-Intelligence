@@ -57,4 +57,16 @@ Program notes:
       save ratio list to CSV file
 
 A pattern I noticed:
-  The graph showed that the ratio of A=True / total_iterations converged like a wave.
+  I noticed a recurring pattern in the formulas to compute the CPT conditioned on each nodes Markov blanket.
+  When I saw that pattern show up again, I was confident that I was on the right track.
+  The pattern looked similar to this:
+
+            P(A|B)*P(C|D)
+      -----------------------------
+      P(A|B)*P(C|D) + P(A|~B)P(C|~D)
+
+
+What I learned:
+  - I learned the basic MCMC algorithm
+  - I learned how to solve for CPT conditioned on a Markov blanket by using probability identities
+    - I was rusty on my probability skills, but after this project I feel a little bit better 
