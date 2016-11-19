@@ -54,4 +54,7 @@ Program notes:
           if the flip > current node value then flip the state of the node
         if a == true then increment count
         if iteration % 40 == 0 then append count / iteration_number to ratio array
-      save ratio list to CSV file 
+      save ratio list to CSV file
+
+A pattern I noticed:
+  The graph showed that the ratio of A=True / total_iterations converged like a wave.
