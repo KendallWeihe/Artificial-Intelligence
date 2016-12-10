@@ -22,15 +22,13 @@ while(ret):
 
 del video[len(video)-1]
 video = np.array(video)
-late_fusion = []
-late_fusion.append(video[0,:,:,:])
-late_fusion.append(video[video.shape[0]-1,:,:,:])
+late_fusion = video[int(video.shape[0]/2),:,:,:]
 
-input_filename = "/home/kendall/Documents/Development/CS463G/final/data/60x80/late_fusion/input_data/" + sys.argv[3] + ".csv"
-late_fusion = np.array(late_fusion, dtype=np.float16).reshape(2*80*3, 60)
+input_filename = "/home/kendall/Documents/Development/CS463G/final/data/60x80/single_frame/input_data/" + sys.argv[3] + ".csv"
+late_fusion = np.array(late_fusion, dtype=np.float16).reshape(80*3, 60)
 np.savetxt(input_filename, late_fusion, delimiter=",", fmt="%d")
 
-ground_truth_filename = "/home/kendall/Documents/Development/CS463G/final/data/60x80/late_fusion/ground_truth/" + sys.argv[3] + ".csv"
+ground_truth_filename = "/home/kendall/Documents/Development/CS463G/final/data/60x80/single_frame/ground_truth/" + sys.argv[3] + ".csv"
 ground_truth = np.zeros((int(sys.argv[4])), dtype=np.float16)
 ground_truth[int(sys.argv[5])] = 1.0
 np.savetxt(ground_truth_filename, ground_truth, delimiter=",", fmt="%d")
