@@ -81,54 +81,54 @@ def cnn(x, weights, biases):
     # BEGIN BATCH 1 LAYER 1
     with tf.name_scope("batch_1_layer_1") as scope:
         b1_conv1 = conv3d(batch_1, weights['b1_wc1'], biases['b1_bc1'], strides=2)
-        b1_conv1 = tf.reshape(b1_conv1, [-1, 30, 40, 2 * 96])
+        b1_conv1 = tf.reshape(b1_conv1, [-1, 30, 40, 2 * 4])
         b1_conv1 = tf.contrib.layers.batch_norm(b1_conv1)
-        b1_conv1 = tf.reshape(b1_conv1, [-1, 30, 40, 2, 96])
+        b1_conv1 = tf.reshape(b1_conv1, [-1, 30, 40, 2, 4])
 
     with tf.name_scope("batch_1_layer_2") as scope:
         b1_conv2 = conv3d(b1_conv1, weights['b1_wc2'], biases['b1_bc2'], strides=2)
-        b1_conv2 = tf.reshape(b1_conv2, [-1, 15, 20, 1 * 256])
+        b1_conv2 = tf.reshape(b1_conv2, [-1, 15, 20, 1 * 8])
         b1_conv2 = tf.contrib.layers.batch_norm(b1_conv2)
-        b1_conv2 = tf.reshape(b1_conv2, [-1, 15, 20, 1, 256])
+        b1_conv2 = tf.reshape(b1_conv2, [-1, 15, 20, 1, 8])
 
     # BEGIN BATCH 2 LAYER 1
     with tf.name_scope("batch_2_layer_1") as scope:
         b2_conv1 = conv3d(batch_2, weights['b2_wc1'], biases['b2_bc1'], strides=2)
-        b2_conv1 = tf.reshape(b2_conv1, [-1, 30, 40, 2 * 96])
+        b2_conv1 = tf.reshape(b2_conv1, [-1, 30, 40, 2 * 4])
         b2_conv1 = tf.contrib.layers.batch_norm(b2_conv1)
-        b2_conv1 = tf.reshape(b2_conv1, [-1, 30, 40, 2, 96])
+        b2_conv1 = tf.reshape(b2_conv1, [-1, 30, 40, 2, 4])
 
     with tf.name_scope("batch_2_layer_2") as scope:
         b2_conv2 = conv3d(b2_conv1, weights['b2_wc2'], biases['b2_bc2'], strides=2)
-        b2_conv2 = tf.reshape(b2_conv2, [-1, 15, 20, 1 * 256])
+        b2_conv2 = tf.reshape(b2_conv2, [-1, 15, 20, 1 * 8])
         b2_conv2 = tf.contrib.layers.batch_norm(b2_conv2)
-        b2_conv2 = tf.reshape(b2_conv2, [-1, 15, 20, 1, 256])
+        b2_conv2 = tf.reshape(b2_conv2, [-1, 15, 20, 1, 8])
 
     # BEGIN BATCH 3 LAYER 1
     with tf.name_scope("batch_3_layer_1") as scope:
         b3_conv1 = conv3d(batch_3, weights['b3_wc1'], biases['b3_bc1'], strides=2)
-        b3_conv1 = tf.reshape(b3_conv1, [-1, 30, 40, 2 * 96])
+        b3_conv1 = tf.reshape(b3_conv1, [-1, 30, 40, 2 * 4])
         b3_conv1 = tf.contrib.layers.batch_norm(b3_conv1)
-        b3_conv1 = tf.reshape(b3_conv1, [-1, 30, 40, 2, 96])
+        b3_conv1 = tf.reshape(b3_conv1, [-1, 30, 40, 2, 4])
 
     with tf.name_scope("batch_3_layer_2") as scope:
         b3_conv2 = conv3d(b3_conv1, weights['b3_wc2'], biases['b3_bc2'], strides=2)
-        b3_conv2 = tf.reshape(b3_conv2, [-1, 15, 20, 1 * 256])
+        b3_conv2 = tf.reshape(b3_conv2, [-1, 15, 20, 1 * 8])
         b3_conv2 = tf.contrib.layers.batch_norm(b3_conv2)
-        b3_conv2 = tf.reshape(b3_conv2, [-1, 15, 20, 1, 256])
+        b3_conv2 = tf.reshape(b3_conv2, [-1, 15, 20, 1, 8])
 
     # BEGIN BATCH 4 LAYER 1
     with tf.name_scope("batch_4_layer_1") as scope:
         b4_conv1 = conv3d(batch_4, weights['b4_wc1'], biases['b4_bc1'], strides=2)
-        b4_conv1 = tf.reshape(b4_conv1, [-1, 30, 40, 2 * 96])
+        b4_conv1 = tf.reshape(b4_conv1, [-1, 30, 40, 2 * 4])
         b4_conv1 = tf.contrib.layers.batch_norm(b4_conv1)
-        b4_conv1 = tf.reshape(b4_conv1, [-1, 30, 40, 2, 96])
+        b4_conv1 = tf.reshape(b4_conv1, [-1, 30, 40, 2, 4])
 
     with tf.name_scope("batch_4_layer_2") as scope:
         b4_conv2 = conv3d(b4_conv1, weights['b4_wc2'], biases['b4_bc2'], strides=2)
-        b4_conv2 = tf.reshape(b4_conv2, [-1, 15, 20, 1 * 256])
+        b4_conv2 = tf.reshape(b4_conv2, [-1, 15, 20, 1 * 8])
         b4_conv2 = tf.contrib.layers.batch_norm(b4_conv2)
-        b4_conv2 = tf.reshape(b4_conv2, [-1, 15, 20, 1, 256])
+        b4_conv2 = tf.reshape(b4_conv2, [-1, 15, 20, 1, 8])
 
     batch_12 = tf.concat(1, (b1_conv2, b2_conv2))
     batch_34 = tf.concat(1, (b3_conv2, b4_conv2))
@@ -136,102 +136,102 @@ def cnn(x, weights, biases):
     # BEGIN BATCHES 1 & 2 LAYERS 3 & 4
     with tf.name_scope("batch_12_layer_3") as scope:
         b12_conv3 = conv3d(batch_12, weights['b12_wc3'], biases['b12_bc3'], strides=2)
-        b12_conv3 = tf.reshape(b12_conv3, [-1, 15, 10, 1 * 384])
+        b12_conv3 = tf.reshape(b12_conv3, [-1, 15, 10, 1 * 16])
         b12_conv3 = tf.contrib.layers.batch_norm(b12_conv3)
-        b12_conv3 = tf.reshape(b12_conv3, [-1, 15, 10, 1, 384])
+        b12_conv3 = tf.reshape(b12_conv3, [-1, 15, 10, 1, 16])
 
     with tf.name_scope("batch_12_layer_4") as scope:
         b12_conv4 = conv3d(b12_conv3, weights['b12_wc4'], biases['b12_bc4'], strides=2)
-        b12_conv4 = tf.reshape(b12_conv4, [-1, 8, 5, 1 * 384])
+        b12_conv4 = tf.reshape(b12_conv4, [-1, 8, 5, 1 * 32])
         b12_conv4 = tf.contrib.layers.batch_norm(b12_conv4)
-        b12_conv4 = tf.reshape(b12_conv4, [-1, 8, 5, 1, 384])
+        b12_conv4 = tf.reshape(b12_conv4, [-1, 8, 5, 1, 32])
 
     # BEGIN BATCHES 3 & 4 LAYERS 3 & 4
     with tf.name_scope("batch_34_layer_3") as scope:
         b34_conv3 = conv3d(batch_34, weights['b34_wc3'], biases['b34_bc3'], strides=2)
-        b34_conv3 = tf.reshape(b34_conv3, [-1, 15, 10, 1 * 384])
+        b34_conv3 = tf.reshape(b34_conv3, [-1, 15, 10, 1 * 16])
         b34_conv3 = tf.contrib.layers.batch_norm(b34_conv3)
-        b34_conv3 = tf.reshape(b34_conv3, [-1, 15, 10, 1, 384])
+        b34_conv3 = tf.reshape(b34_conv3, [-1, 15, 10, 1, 16])
 
     with tf.name_scope("batch_34_layer_4") as scope:
         b34_conv4 = conv3d(b34_conv3, weights['b34_wc4'], biases['b34_bc4'], strides=2)
-        b34_conv4 = tf.reshape(b34_conv4, [-1, 8, 5, 1 * 384])
+        b34_conv4 = tf.reshape(b34_conv4, [-1, 8, 5, 1 * 32])
         b34_conv4 = tf.contrib.layers.batch_norm(b34_conv4)
-        b34_conv4 = tf.reshape(b34_conv4, [-1, 8, 5, 1, 384])
+        b34_conv4 = tf.reshape(b34_conv4, [-1, 8, 5, 1, 32])
 
     batch_1234 = tf.concat(1, (b12_conv4, b34_conv4))
 
     # PASS THE LAST BATCH THROUGH THE FINAL LAYER
     with tf.name_scope("batch_1234_layer_5") as scope:
         b1234_conv5 = conv3d(batch_1234, weights['b1234_wc5'], biases['b1234_bc5'], strides=2)
-        b1234_conv5 = tf.reshape(b1234_conv5, [-1, 8, 3, 1 * 256])
+        b1234_conv5 = tf.reshape(b1234_conv5, [-1, 8, 3, 1 * 64])
         b1234_conv5 = tf.contrib.layers.batch_norm(b1234_conv5)
-        b1234_conv5 = tf.reshape(b1234_conv5, [-1, 8, 3, 1, 256])
+        b1234_conv5 = tf.reshape(b1234_conv5, [-1, 8, 3, 1, 64])
 
-    conv_output = tf.reshape(b1234_conv5, [-1, 8*3*1*256])
+    conv_output = tf.reshape(b1234_conv5, [-1, 8*3*1*64])
     out = tf.add(tf.matmul(conv_output, weights['fc']), biases['fc'])
     out = tf.nn.dropout(out, dropout)
 
     return out
 
 weights = {
-    'b1_wc1' : tf.get_variable("weights_1", shape=[3, 3, 1, 4, 96],
+    'b1_wc1' : tf.get_variable("weights_1", shape=[3, 3, 1, 4, 4],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b2_wc1' : tf.get_variable("weights_2", shape=[3, 3, 1, 4, 96],
+    'b2_wc1' : tf.get_variable("weights_2", shape=[3, 3, 1, 4, 4],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b3_wc1' : tf.get_variable("weights_3", shape=[3, 3, 1, 4, 96],
+    'b3_wc1' : tf.get_variable("weights_3", shape=[3, 3, 1, 4, 4],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b4_wc1' : tf.get_variable("weights_4", shape=[3, 3, 1, 4, 96],
+    'b4_wc1' : tf.get_variable("weights_4", shape=[3, 3, 1, 4, 4],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b1_wc2' : tf.get_variable("weights_5", shape=[3, 3, 1, 96, 256],
+    'b1_wc2' : tf.get_variable("weights_5", shape=[3, 3, 1, 4, 8],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b2_wc2' : tf.get_variable("weights_6", shape=[3, 3, 1, 96, 256],
+    'b2_wc2' : tf.get_variable("weights_6", shape=[3, 3, 1, 4, 8],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b3_wc2' : tf.get_variable("weights_7", shape=[3, 3, 1, 96, 256],
+    'b3_wc2' : tf.get_variable("weights_7", shape=[3, 3, 1, 4, 8],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b4_wc2' : tf.get_variable("weights_8", shape=[3, 3, 1, 96, 256],
+    'b4_wc2' : tf.get_variable("weights_8", shape=[3, 3, 1, 4, 8],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b12_wc3' : tf.get_variable("weights_9", shape=[3, 3, 1, 256, 384],
+    'b12_wc3' : tf.get_variable("weights_9", shape=[3, 3, 1, 8, 16],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b34_wc3' : tf.get_variable("weights_11", shape=[3, 3, 1, 256, 384],
+    'b34_wc3' : tf.get_variable("weights_11", shape=[3, 3, 1, 8, 16],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b12_wc4' : tf.get_variable("weights_13", shape=[3, 3, 1, 384, 384],
+    'b12_wc4' : tf.get_variable("weights_13", shape=[3, 3, 1, 16, 32],
               initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b34_wc4' : tf.get_variable("weights_15", shape=[3, 3, 1, 384, 384],
+    'b34_wc4' : tf.get_variable("weights_15", shape=[3, 3, 1, 16, 32],
               initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'b1234_wc5' : tf.get_variable("weights_16", shape=[3, 3, 1, 384, 256],
+    'b1234_wc5' : tf.get_variable("weights_16", shape=[3, 3, 1, 32, 64],
               initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
-    'fc' : tf.get_variable("weights_17", shape=[8*3*1*256, n_classes],
+    'fc' : tf.get_variable("weights_17", shape=[8*3*1*64, n_classes],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 }
 
 biases = {
-    'b1_bc1': tf.Variable(tf.zeros([96], dtype=tf.float32), name="biases_1", dtype=tf.float32),
-    'b2_bc1': tf.Variable(tf.zeros([96], dtype=tf.float32), name="biases_2", dtype=tf.float32),
-    'b3_bc1': tf.Variable(tf.zeros([96], dtype=tf.float32), name="biases_3", dtype=tf.float32),
-    'b4_bc1': tf.Variable(tf.zeros([96], dtype=tf.float32), name="biases_4", dtype=tf.float32),
-    'b1_bc2': tf.Variable(tf.zeros([256], dtype=tf.float32), name="biases_5", dtype=tf.float32),
-    'b2_bc2': tf.Variable(tf.zeros([256], dtype=tf.float32), name="biases_6", dtype=tf.float32),
-    'b3_bc2': tf.Variable(tf.zeros([256], dtype=tf.float32), name="biases_7", dtype=tf.float32),
-    'b4_bc2': tf.Variable(tf.zeros([256], dtype=tf.float32), name="biases_8", dtype=tf.float32),
-    'b12_bc3': tf.Variable(tf.zeros([384], dtype=tf.float32), name="biases_9", dtype=tf.float32),
-    'b34_bc3': tf.Variable(tf.zeros([384], dtype=tf.float32), name="biases_11", dtype=tf.float32),
-    'b12_bc4': tf.Variable(tf.zeros([384], dtype=tf.float32), name="biases_13", dtype=tf.float32),
-    'b34_bc4': tf.Variable(tf.zeros([384], dtype=tf.float32), name="biases_15", dtype=tf.float32),
-    'b1234_bc5': tf.Variable(tf.zeros([256], dtype=tf.float32), name="biases_16", dtype=tf.float32),
+    'b1_bc1': tf.Variable(tf.zeros([4], dtype=tf.float32), name="biases_1", dtype=tf.float32),
+    'b2_bc1': tf.Variable(tf.zeros([4], dtype=tf.float32), name="biases_2", dtype=tf.float32),
+    'b3_bc1': tf.Variable(tf.zeros([4], dtype=tf.float32), name="biases_3", dtype=tf.float32),
+    'b4_bc1': tf.Variable(tf.zeros([4], dtype=tf.float32), name="biases_4", dtype=tf.float32),
+    'b1_bc2': tf.Variable(tf.zeros([8], dtype=tf.float32), name="biases_5", dtype=tf.float32),
+    'b2_bc2': tf.Variable(tf.zeros([8], dtype=tf.float32), name="biases_6", dtype=tf.float32),
+    'b3_bc2': tf.Variable(tf.zeros([8], dtype=tf.float32), name="biases_7", dtype=tf.float32),
+    'b4_bc2': tf.Variable(tf.zeros([8], dtype=tf.float32), name="biases_8", dtype=tf.float32),
+    'b12_bc3': tf.Variable(tf.zeros([16], dtype=tf.float32), name="biases_9", dtype=tf.float32),
+    'b34_bc3': tf.Variable(tf.zeros([16], dtype=tf.float32), name="biases_11", dtype=tf.float32),
+    'b12_bc4': tf.Variable(tf.zeros([32], dtype=tf.float32), name="biases_13", dtype=tf.float32),
+    'b34_bc4': tf.Variable(tf.zeros([32], dtype=tf.float32), name="biases_15", dtype=tf.float32),
+    'b1234_bc5': tf.Variable(tf.zeros([64], dtype=tf.float32), name="biases_16", dtype=tf.float32),
     'fc': tf.Variable(tf.zeros([n_classes], dtype=tf.float32), name="biases_17", dtype=tf.float32),
 }
 
@@ -305,4 +305,5 @@ with tf.Session() as sess:
     prediction_class_distribution = np.genfromtxt("./prediction_class_distribution.csv", delimiter=",")
     prediction_acc_by_class = np.array(prediction_acc_by_class)
     print "Prediction average by class = " + str(np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution)
-    np.savetxt("./acc_by_class_slow_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./mean_acc_by_class_slow_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./acc_by_class_slow_fusion.csv", prediction_acc_by_class, delimiter=",")

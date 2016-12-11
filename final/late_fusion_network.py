@@ -263,4 +263,5 @@ with tf.Session() as sess:
     prediction_class_distribution = np.genfromtxt("./prediction_class_distribution.csv", delimiter=",")
     prediction_acc_by_class = np.array(prediction_acc_by_class)
     print "Prediction average by class = " + str(np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution)
-    np.savetxt("./acc_by_class_late_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./mean_acc_by_class_late_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./acc_by_class_late_fusion.csv", prediction_acc_by_class, delimiter=",")

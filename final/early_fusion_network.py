@@ -105,14 +105,14 @@ def cnn(x, weights, biases):
         conv5 = tf.contrib.layers.batch_norm(conv5)
         conv5 = tf.reshape(conv5, [-1, 2, 3, 1, 64])
 
-    conv_output = tf.reshape(b1234_conv5, [-1, 2*3*1*64])
+    conv_output = tf.reshape(conv5, [-1, 2*3*1*64])
     out = tf.add(tf.matmul(conv_output, weights['fc']), biases['fc'])
     out = tf.nn.dropout(out, dropout)
 
     return out
 
 weights = {
-    'wc1' : tf.get_variable("weights_1", shape=[3, 3, 1, 3, 4],
+    'wc1' : tf.get_variable("weights_1", shape=[3, 3, 1, 10, 4],
                initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32),
 
     'wc2' : tf.get_variable("weights_5", shape=[3, 3, 1, 4, 8],
@@ -210,4 +210,5 @@ with tf.Session() as sess:
     prediction_class_distribution = np.genfromtxt("./prediction_class_distribution.csv", delimiter=",")
     prediction_acc_by_class = np.array(prediction_acc_by_class)
     print "Prediction average by class = " + str(np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution)
-    np.savetxt("./acc_by_class_early_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./mean_acc_by_class_early_fusion.csv", np.mean(prediction_acc_by_class, axis=0) / prediction_class_distribution, delimiter=",")
+    np.savetxt("./acc_by_class_early_fusion.csv", prediction_acc_by_class, delimiter=",")
